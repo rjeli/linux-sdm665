@@ -1,0 +1,142 @@
+/dts-v1/;
+// version:		17
+// last_comp_version:	16
+// boot_cpuid_phys:	0x0
+
+/ {
+    #address-cells = <2>;
+    #size-cells = <2>;
+    cpus { };
+    soc { };
+    chosen { };
+    aliases { };
+    memory { device_type = "memory"; reg = <0 0 0 0>; };
+};
+
+/ {
+    model = "Qualcomm Technologies, Inc. TRINKET SoC";
+    compatible = "qcom,trinket";
+    qcom,board-id = <0x22 0x0>;
+    qcom,msm-id = <0x18a 0x10000>;
+
+    cpus {
+        #address-cells = <0x00000002>;
+        #size-cells = <0x00000000>;
+        cpu@0 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000000>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000a>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@1 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000001>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000b>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@2 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000002>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000c>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@3 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000003>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000d>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@100 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000100>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x0000000e>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@101 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000101>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x0000000f>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@102 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000102>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x00000010>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@103 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000103>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x00000011>;
+            compatible = "qcom,kryo260";
+        };
+        cpu-map {
+            cluster0 {
+                core0 {
+                    cpu = <0x0000000a>;
+                };
+                core1 {
+                    cpu = <0x0000000b>;
+                };
+                core2 {
+                    cpu = <0x0000000c>;
+                };
+                core3 {
+                    cpu = <0x0000000d>;
+                };
+            };
+            cluster1 {
+                core0 {
+                    cpu = <0x0000000e>;
+                };
+                core1 {
+                    cpu = <0x0000000f>;
+                };
+                core2 {
+                    cpu = <0x00000010>;
+                };
+                core3 {
+                    cpu = <0x00000011>;
+                };
+            };
+        };
+    };
+
+    reserved-memory {
+        #address-cells = <0x00000002>;
+        #size-cells = <0x00000002>;
+        ranges;
+    };
+};

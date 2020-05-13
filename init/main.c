@@ -12,6 +12,12 @@
 
 #define DEBUG		/* Enable initcall_debug */
 
+#define SDM_RESTART do { \
+	  	int *pshold = ioremap(0x440b000, 4); \
+		*pshold = 0; \
+		while (1) {} \
+	} while (0) 
+
 #include <linux/types.h>
 #include <linux/extable.h>
 #include <linux/module.h>
@@ -851,6 +857,22 @@ asmlinkage __visible void __init start_kernel(void)
 	/* trace_printk can be enabled here */
 	early_trace_init();
 
+	// ssleep(5);
+
+	// panic("yoloooooooooooo");
+
+	/*
+		cont_splash_memory: cont_splash_region@5c000000 {
+			reg = <0x0 0x5c000000 0x0 0x00f00000>;
+			label = "cont_splash_region";
+		};
+	*/
+
+	/*
+	u8 *splash = ioremap(0x5c000000, 0x100000);
+	memset(splash+0x1000, 'A', 1);
+	*/
+
 	/*
 	 * Set up the scheduler prior starting any interrupts (such as the
 	 * timer interrupt). Full topology setup happens at smp_init()
@@ -866,6 +888,8 @@ asmlinkage __visible void __init start_kernel(void)
 		 "Interrupts were enabled *very* early, fixing it\n"))
 		local_irq_disable();
 	radix_tree_init();
+
+	// GOT HERE
 
 	/*
 	 * Set up housekeeping before setting up workqueues to allow the unbound
@@ -888,16 +912,22 @@ asmlinkage __visible void __init start_kernel(void)
 	if (initcall_debug)
 		initcall_debug_enable();
 
+	// GOT HERE
+
 	context_tracking_init();
 	/* init some links before init_ISA_irqs() */
 	early_irq_init();
+	// GOT HERE
 	init_IRQ();
+	// GOT HERE
 	tick_init();
 	rcu_init_nohz();
 	init_timers();
 	hrtimers_init();
 	softirq_init();
 	timekeeping_init();
+
+	// GOT HERE
 
 	/*
 	 * For best initial stack canary entropy, prepare it after:
@@ -912,11 +942,16 @@ asmlinkage __visible void __init start_kernel(void)
 	add_device_randomness(command_line, strlen(command_line));
 	boot_init_stack_canary();
 
+	// GOT HERE
+
 	time_init();
 	perf_event_init();
 	profile_init();
+	// GOT HERE
 	call_function_init();
 	WARN(!irqs_disabled(), "Interrupts were enabled early\n");
+
+	// HANG HERE
 
 	early_boot_irqs_disabled = false;
 	local_irq_enable();
@@ -932,6 +967,8 @@ asmlinkage __visible void __init start_kernel(void)
 	if (panic_later)
 		panic("Too many boot %s vars at `%s'", panic_later,
 		      panic_param);
+
+	// GOT HERE
 
 	lockdep_init();
 
@@ -992,6 +1029,8 @@ asmlinkage __visible void __init start_kernel(void)
 	taskstats_init_early();
 	delayacct_init();
 
+	// GOT HERE
+
 	poking_init();
 	check_bugs();
 
@@ -1000,6 +1039,7 @@ asmlinkage __visible void __init start_kernel(void)
 	sfi_init_late();
 
 	/* Do the rest non-__init'ed, we're now alive */
+	// GOT HERE!!!
 	arch_call_rest_init();
 }
 

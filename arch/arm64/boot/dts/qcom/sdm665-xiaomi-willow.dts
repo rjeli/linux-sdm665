@@ -1,0 +1,242 @@
+/dts-v1/;
+// version:		17
+// last_comp_version:	16
+// boot_cpuid_phys:	0x0
+
+// NEW
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+/ {
+    model = "Qualcomm Technologies, Inc. TRINKET SoC";
+    compatible = "qcom,trinket";
+    #address-cells = <0x00000002>;
+    #size-cells = <0x00000002>;
+    qcom,board-id = <0x22 0x0>;
+    qcom,msm-id = <0x18a 0x10000>;
+    // NEW
+    interrupt-parent = <&wakegic>;
+    chosen { };
+    soc: soc { };
+    aliases { };
+    memory {
+        device_type = "memory";
+        reg = <0x00000000 0x00000000 0x00000000 0x00000000>;
+    };
+    cpus {
+        #address-cells = <0x00000002>;
+        #size-cells = <0x00000000>;
+        cpu@0 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000000>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000a>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@1 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000001>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000b>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@2 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000002>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000c>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@3 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000003>;
+            capacity-dmips-mhz = <0x00000400>;
+            d-cache-size = <0x00008000>;
+            i-cache-size = <0x00008000>;
+            phandle = <0x0000000d>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@100 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000100>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x0000000e>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@101 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000101>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x0000000f>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@102 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000102>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x00000010>;
+            compatible = "qcom,kryo260";
+        };
+        cpu@103 {
+            device_type = "cpu";
+            enable-method = "psci";
+            reg = <0x00000000 0x00000103>;
+            capacity-dmips-mhz = <0x00000666>;
+            d-cache-size = <0x00010000>;
+            i-cache-size = <0x00010000>;
+            phandle = <0x00000011>;
+            compatible = "qcom,kryo260";
+        };
+        cpu-map {
+            cluster0 {
+                core0 {
+                    cpu = <0x0000000a>;
+                };
+                core1 {
+                    cpu = <0x0000000b>;
+                };
+                core2 {
+                    cpu = <0x0000000c>;
+                };
+                core3 {
+                    cpu = <0x0000000d>;
+                };
+            };
+            cluster1 {
+                core0 {
+                    cpu = <0x0000000e>;
+                };
+                core1 {
+                    cpu = <0x0000000f>;
+                };
+                core2 {
+                    cpu = <0x00000010>;
+                };
+                core3 {
+                    cpu = <0x00000011>;
+                };
+            };
+        };
+    };
+    reserved-memory {
+        #address-cells = <0x00000002>;
+        #size-cells = <0x00000002>;
+        ranges;
+    };
+};
+
+&soc {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ranges = <0 0 0 0xffffffff>;
+    compatible = "simple-bus";
+
+    wakegic: wake-gic {
+        compatible = "qcom,mpm-gic-trinket", "qcom,mpm-gic";
+        interrupts-extended = <&wakegic GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
+        reg = <0x45f01b8 0x1000>, <0xf011008 0x4>;  // MSM_APCS_GCC_BASE 4K
+        reg-names = "vmpm", "ipc";
+        qcom,num-mpm-irqs = <96>;
+        interrupt-controller;
+        interrupt-parent = <&intc>;
+        #interrupt-cells = <3>;
+    };
+
+    intc: interrupt-controller@f200000 {
+        compatible = "arm,gic-v3";
+        #interrupt-cells = <3>;
+        interrupt-controller;
+        interrupt-parent = <&intc>;
+        #redistributor-regions = <1>;
+        redistributor-stride = <0x0 0x20000>;
+        reg = <0xf200000 0x10000>,     
+              <0xf300000 0x100000>;   /* GICD, GICR * 8 */
+        interrupts = <1 9 4>;
+    };
+
+    timer {
+        compatible = "arm,armv8-timer";
+        interrupts = <1 1 0xf08>,
+                 <1 2 0xf08>,
+                 <1 3 0xf08>,
+                 <1 0 0xf08>;
+        clock-frequency = <19200000>;
+    };
+
+    timer@f120000 {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        compatible = "arm,armv7-timer-mem";
+        reg = <0xf120000 0x1000>;
+        clock-frequency = <19200000>;
+
+        frame@f121000 {
+            frame-number = <0>;
+            interrupts = <0 8 0x4>,
+                     <0 7 0x4>;
+            reg = <0xf121000 0x1000>,
+                  <0xf122000 0x1000>;
+        };
+
+        frame@f123000 {
+            frame-number = <1>;
+            interrupts = <0 9 0x4>;
+            reg = <0xf123000 0x1000>;
+            status = "disabled";
+        };
+
+        frame@f124000 {
+            frame-number = <2>;
+            interrupts = <0 10 0x4>;
+            reg = <0xf124000 0x1000>;
+            status = "disabled";
+        };
+
+        frame@f125000 {
+            frame-number = <3>;
+            interrupts = <0 11 0x4>;
+            reg = <0xf125000 0x1000>;
+            status = "disabled";
+        };
+
+        frame@f126000 {
+            frame-number = <4>;
+            interrupts = <0 12 0x4>;
+            reg = <0xf126000 0x1000>;
+            status = "disabled";
+        };
+
+        frame@f127000 {
+            frame-number = <5>;
+            interrupts = <0 13 0x4>;
+            reg = <0xf127000 0x1000>;
+            status = "disabled";
+        };
+
+        frame@f128000 {
+            frame-number = <6>;
+            interrupts = <0 14 0x4>;
+            reg = <0xf128000 0x1000>;
+            status = "disabled";
+        };
+    };
+};
