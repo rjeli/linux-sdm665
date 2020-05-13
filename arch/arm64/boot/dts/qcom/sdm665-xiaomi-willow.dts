@@ -3,7 +3,6 @@
 // last_comp_version:	16
 // boot_cpuid_phys:	0x0
 
-// NEW
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-trinket.h>
 
@@ -14,7 +13,6 @@
     #size-cells = <0x00000002>;
     qcom,board-id = <0x22 0x0>;
     qcom,msm-id = <0x18a 0x10000>;
-    // NEW
     interrupt-parent = <&wakegic>;
     chosen { };
     soc: soc { };
@@ -268,16 +266,6 @@
             status = "disabled";
         };
     };
-
-    /*
-    gcc: clock-controller@100000 {
-        compatible = "qcom,gcc-sdm845";
-        reg = <0 0x00100000 0 0x1f0000>;
-        #clock-cells = <1>;
-        #reset-cells = <1>;
-        #power-domain-cells = <1>;
-    };
-    */
 
     psci {
         compatible = "arm,psci-1.0";
