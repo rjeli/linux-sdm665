@@ -134,4 +134,6 @@
 #define RPM_SMD_RF_CLK3_PIN			88
 #define RPM_SMD_RF_CLK3_A_PIN			89
 
+#define RPM_SMD_CXO_OTG_CLK				114
+
 #endif

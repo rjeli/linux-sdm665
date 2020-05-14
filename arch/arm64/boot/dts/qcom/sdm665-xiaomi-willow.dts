@@ -5,6 +5,7 @@
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-trinket.h>
+#include <dt-bindings/clock/qcom,rpmcc.h>
 
 / {
     model = "Qualcomm Technologies, Inc. TRINKET SoC";
@@ -26,113 +27,171 @@
     cpus {
         #address-cells = <0x00000002>;
         #size-cells = <0x00000000>;
-        cpu@0 {
+        CPU0: cpu@0 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000000>;
             capacity-dmips-mhz = <0x00000400>;
             d-cache-size = <0x00008000>;
             i-cache-size = <0x00008000>;
-            phandle = <0x0000000a>;
+            next-level-cache = <&L2_0>;
             compatible = "qcom,kryo260";
+            L2_0: l2-cache {
+                  compatible = "arm,arch-cache";
+                  cache-size = <0x80000>;
+                  cache-level = <2>;
+            };
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@1 {
+        CPU1: cpu@1 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000001>;
             capacity-dmips-mhz = <0x00000400>;
             d-cache-size = <0x00008000>;
             i-cache-size = <0x00008000>;
-            phandle = <0x0000000b>;
+            next-level-cache = <&L2_0>;
             compatible = "qcom,kryo260";
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@2 {
+        CPU2: cpu@2 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000002>;
             capacity-dmips-mhz = <0x00000400>;
             d-cache-size = <0x00008000>;
             i-cache-size = <0x00008000>;
-            phandle = <0x0000000c>;
+            next-level-cache = <&L2_0>;
             compatible = "qcom,kryo260";
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@3 {
+        CPU3: cpu@3 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000003>;
             capacity-dmips-mhz = <0x00000400>;
             d-cache-size = <0x00008000>;
             i-cache-size = <0x00008000>;
-            phandle = <0x0000000d>;
+            next-level-cache = <&L2_0>;
             compatible = "qcom,kryo260";
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@100 {
+        CPU4: cpu@100 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000100>;
             capacity-dmips-mhz = <0x00000666>;
             d-cache-size = <0x00010000>;
             i-cache-size = <0x00010000>;
-            phandle = <0x0000000e>;
+            next-level-cache = <&L2_1>;
             compatible = "qcom,kryo260";
+            L2_1: l2-cache {
+                  compatible = "arm,arch-cache";
+                  cache-size = <0x100000>;
+                  cache-level = <2>;
+            };
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@101 {
+        CPU5: cpu@101 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000101>;
             capacity-dmips-mhz = <0x00000666>;
             d-cache-size = <0x00010000>;
             i-cache-size = <0x00010000>;
-            phandle = <0x0000000f>;
+            next-level-cache = <&L2_1>;
             compatible = "qcom,kryo260";
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@102 {
+        CPU6: cpu@102 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000102>;
             capacity-dmips-mhz = <0x00000666>;
             d-cache-size = <0x00010000>;
             i-cache-size = <0x00010000>;
-            phandle = <0x00000010>;
+            next-level-cache = <&L2_1>;
             compatible = "qcom,kryo260";
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
-        cpu@103 {
+        CPU7: cpu@103 {
             device_type = "cpu";
             enable-method = "psci";
             reg = <0x00000000 0x00000103>;
             capacity-dmips-mhz = <0x00000666>;
             d-cache-size = <0x00010000>;
             i-cache-size = <0x00010000>;
-            phandle = <0x00000011>;
+            next-level-cache = <&L2_1>;
             compatible = "qcom,kryo260";
+            l1-icache {
+                compatible = "arm,arch-cache";
+            };
+            l1-dcache {
+                compatible = "arm,arch-cache";
+            };
         };
         cpu-map {
             cluster0 {
                 core0 {
-                    cpu = <0x0000000a>;
+                    cpu = <&CPU0>;
                 };
                 core1 {
-                    cpu = <0x0000000b>;
+                    cpu = <&CPU1>;
                 };
                 core2 {
-                    cpu = <0x0000000c>;
+                    cpu = <&CPU2>;
                 };
                 core3 {
-                    cpu = <0x0000000d>;
+                    cpu = <&CPU3>;
                 };
             };
             cluster1 {
                 core0 {
-                    cpu = <0x0000000e>;
+                    cpu = <&CPU4>;
                 };
                 core1 {
-                    cpu = <0x0000000f>;
+                    cpu = <&CPU5>;
                 };
                 core2 {
-                    cpu = <0x00000010>;
+                    cpu = <&CPU6>;
                 };
                 core3 {
-                    cpu = <0x00000011>;
+                    cpu = <&CPU7>;
                 };
             };
         };
@@ -143,24 +202,6 @@
         ranges;
     };
 
-    /*
-    smd {
-        compatible = "qcom,smd";
-        rpm {
-            interrupts = <GIC_SPI 194 IRQ_TYPE_EDGE_RISING>;
-            qcom,ipc = ;
-            qcom,smd-edge = <15>; // SMD_APPS_RPM
-            rpm_requests {
-                compatible = "qcom,rpm-sdm665";
-                qcom,smd-channels = "rpm_requests";
-                foo-regulators {
-                    compatible = "qcom,rpm-foo-regulators";
-                    // ...
-                };
-            };
-        };
-    };
-    */
 };
 
 &soc {
@@ -168,6 +209,22 @@
     #size-cells = <1>;
     ranges = <0 0 0 0xffffffff>;
     compatible = "simple-bus";
+
+    clocks {
+        sleep_clk: sleep-clk {
+            compatible = "fixed-clock";
+            clock-frequency = <32000>;
+            clock-output-names = "chip_sleep";
+            #clock-cells = <1>;
+        };
+
+        xo_board {
+            compatible = "fixed-clock";
+            #clock-cells = <0>;
+            clock-frequency = <19200000>;
+            clock-output-names = "xo_board";
+        };
+    };
 
     wakegic: wake-gic {
         compatible = "qcom,mpm-gic-trinket", "qcom,mpm-gic";
@@ -272,7 +329,7 @@
         method = "smc";
     };
 
-    gcc: gcc@1400000 {
+    gcc: clock-controller@1400000 {
         compatible = "qcom,gcc-trinket", "syscon";
         reg = <0x1400000 0x1f0000>;
         // reg-names = "cc_base";
@@ -280,6 +337,52 @@
         // vdd_cx_ao-supply = <&VDD_CX_LEVEL_AO>;
         #clock-cells = <1>;
         #reset-cells = <1>;
+    };
+
+    apcs_glb: mailbox@0f111000 {
+        compatible = "qcom,sdm665-apcs-hmss-global";
+        reg = <0x0f111000 0x1000>;
+        #mbox-cells = <1>;
+    };
+
+    rpm_msg_ram: memory@045f0000 {
+        compatible = "qcom,rpm-msg-ram";
+        reg = <0x045f0000 0x7000>;
+    };
+
+    rpm-glink {
+        compatible = "qcom,glink-rpm";
+        interrupts = <GIC_SPI 194 IRQ_TYPE_EDGE_RISING>;
+        qcom,rpm-msg-ram = <&rpm_msg_ram>;
+        mboxes = <&apcs_glb 0>;
+        rpm-requests {
+            compatible = "qcom,rpm-sdm665";
+            qcom,glink-channels = "rpm_requests";
+
+            rpmcc: clock-controller {
+                compatible = "qcom,rpmcc-sdm665", "qcom,rpmcc";
+                #clock-cells = <1>;
+            };
+
+            smd_rpm_regulators: pm6125-regulators {
+                compatible = "qcom,rpm-pm6125-regulators";
+                pm6125_l7: l7 {
+                    regulator-min-microvolt = <872000>;
+                    regulator-max-microvolt = <976000>;
+                    regulator-always-on;
+                };
+                pm6125_l10: l10 {
+                    regulator-min-microvolt = <1800000>;
+                    regulator-max-microvolt = <1896000>;
+                    regulator-always-on;
+                };
+                pm6125_l15: l15 {
+                    regulator-min-microvolt = <3104000>;
+                    regulator-max-microvolt = <3232000>;
+                    // regulator-always-on;
+                };
+            };
+        };
     };
 
     qupv3_0: geniqup@4ac0000 {
@@ -299,6 +402,74 @@
             clock-names = "se";
             clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
         };
+    };
+
+    qusb_phy0: qusb@1613000 {
+        compatible = "qcom,sdm665-qusb2-phy";
+        reg = <0x01613000 0x180>;
+        #phy-cells = <0>;
+
+        clocks = <&gcc GCC_AHB2PHY_USB_CLK>, <&rpmcc RPM_SMD_CXO_OTG_CLK>;
+        clock-names = "cfg_ahb", "ref";
+
+        // core vdd, either NONE or LOWER
+        // FIXME
+        // vdd = <&pm6125_l7>;
+        // 1.8
+        vdda-pll-supply = <&pm6125_l10>;
+        // 3.1
+        vdda-phy-dpdm-supply = <&pm6125_l15>;
+
+        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+    };
+
+    usb0: ssusb@4e00000 {
+        compatible = "qcom,dwc3";
+        reg = <0x4e00000 0x100000>;
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        interrupt-names = "hs_phy_irq", "ss_phy_irq";
+        interrupts = <0 260 0>, <0 422 0>;
+
+        clock-names = "core", "iface", "cfg_noc", "xo", "sleep", "mock_utmi";
+        clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+                 <&gcc GCC_SYS_NOC_USB3_PRIM_AXI_CLK>,
+                 <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
+                 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>;
+
+        assigned-clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+            <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>;
+        assigned-clock-rates = <66666667>, <19200000>;
+
+        resets = <&gcc GCC_USB30_PRIM_BCR>;
+        reset-names = "core_reset";
+
+        dwc3@4e00000 {
+            compatible = "snps,dwc3";
+            reg = <0x4e00000 0xcd00>;
+            interrupt-parent = <&intc>;
+            interrupts = <0 255 0>;
+            usb-phy = <&qusb_phy0>, <&usb_nop_phy>;
+            tx-fifo-resize;
+            // linux,sysdev_is_parent;
+            // snps,disable-clk-gating;
+            snps,dis_u2_susphy_quirk;
+            snps,dis_enblslpm_quirk;
+            snps,has-lpm-erratum;
+            snps,hird-threshold = /bits/ 8 <0x10>;
+            snps,usb3_lpm_capable;
+            maximum-speed = "high-speed";
+            dr_mode = "peripheral";
+        };
+    };
+
+
+    usb_nop_phy: usb_nop_phy {
+        compatible = "usb-nop-xceiv";
     };
 
     /*

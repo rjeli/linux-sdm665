@@ -766,6 +766,20 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
 	.num_clks = ARRAY_SIZE(msm8998_clks),
 };
 
+/* sdm665 */
+DEFINE_CLK_SMD_RPM_BRANCH(sdm665, bi_tcxo, bi_tcxo_ao, QCOM_SMD_RPM_MISC_CLK, 0, 19200000);
+// TODO: add more
+
+static struct clk_smd_rpm *sdm665_clks[] = {
+	[RPM_SMD_CXO_OTG_CLK] = &sdm665_bi_tcxo,
+	// TODO: add more
+};
+
+static const struct rpm_smd_clk_desc rpm_clk_sdm665 = {
+	.clks = sdm665_clks,
+	.num_clks = ARRAY_SIZE(sdm665_clks),
+};
+
 static const struct of_device_id rpm_smd_clk_match_table[] = {
 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
@@ -773,6 +787,7 @@ static const struct of_device_id rpm_smd_clk_match_table[] = {
 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
 	{ .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
 	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
+	{ .compatible = "qcom,rpmcc-sdm665", .data = &rpm_clk_sdm665 },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
