@@ -62,6 +62,7 @@ enum {
 	P_SLEEP_CLK,
 };
 
+/*
 static const struct parent_map gcc_parent_map_0[] = {
 	{ P_BI_TCXO, 0 },
 	{ P_GPLL0_OUT_EARLY, 1 },
@@ -83,6 +84,7 @@ static const char * const gcc_parent_names_0_ao[] = {
 	"core_bi_pll_test_se",
 };
 
+*/
 static const struct parent_map gcc_parent_map_1[] = {
 	{ P_BI_TCXO, 0 },
 	{ P_GPLL0_OUT_EARLY, 1 },
@@ -304,7 +306,6 @@ static const char * const gcc_parent_names_14[] = {
 	"core_bi_pll_test_se",
 };
 
-*/
 static struct clk_alpha_pll gpll0_out_early = {
 	.offset = 0x0,
 	.clkr = {
@@ -330,7 +331,6 @@ static struct clk_fixed_factor gpll0_out_aux2 = {
 	},
 };
 
-/*
 static struct clk_fixed_factor gpll0_out_main = {
 	.mult = 1,
 	.div = 2,
@@ -1561,7 +1561,6 @@ static struct clk_rcg2 gcc_ufs_phy_unipro_core_clk_src = {
 	},
 };
 
-*/
 static const struct freq_tbl ftbl_gcc_usb30_prim_master_clk_src[] = {
 	F(66666667, P_GPLL0_OUT_AUX2, 4.5, 0, 0),
 	F(133333333, P_GPLL0_OUT_EARLY, 4.5, 0, 0),
@@ -1576,11 +1575,19 @@ static struct clk_rcg2 gcc_usb30_prim_master_clk_src = {
 	.hid_width = 5,
 	.parent_map = gcc_parent_map_0,
 	.freq_tbl = ftbl_gcc_usb30_prim_master_clk_src,
+	.enable_safe_config = true,
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "gcc_usb30_prim_master_clk_src",
 		.parent_names = gcc_parent_names_0,
 		.num_parents = 4,
 		.ops = &clk_rcg2_ops,
+		.vdd_class = &vdd_cx,
+		.num_rate_max = VDD_NUM,
+		.rate_max = (unsigned long[VDD_NUM]) {
+			[VDD_LOWER] = 66666667,
+			[VDD_LOW] = 133333333,
+			[VDD_NOMINAL] = 200000000,
+			[VDD_HIGH] = 240000000},
 	},
 };
 
@@ -1598,14 +1605,19 @@ static struct clk_rcg2 gcc_usb30_prim_mock_utmi_clk_src = {
 	.hid_width = 5,
 	.parent_map = gcc_parent_map_0,
 	.freq_tbl = ftbl_gcc_usb30_prim_mock_utmi_clk_src,
+	.enable_safe_config = true,
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "gcc_usb30_prim_mock_utmi_clk_src",
 		.parent_names = gcc_parent_names_0,
 		.num_parents = 4,
 		.ops = &clk_rcg2_ops,
+		.vdd_class = &vdd_cx,
+		.num_rate_max = VDD_NUM,
+		.rate_max = (unsigned long[VDD_NUM]) {
+			[VDD_LOWER] = 20000000,
+			[VDD_LOW] = 60000000},
 	},
 };
-/*
 
 static const struct freq_tbl ftbl_gcc_usb3_prim_phy_aux_clk_src[] = {
 	F(19200000, P_BI_TCXO, 1, 0, 0),
@@ -1689,7 +1701,6 @@ static struct clk_branch gcc_ahb2phy_csi_clk = {
 	},
 };
 
-*/
 static struct clk_branch gcc_ahb2phy_usb_clk = {
 	.halt_reg = 0x1d008,
 	.halt_check = BRANCH_HALT,
@@ -1704,7 +1715,6 @@ static struct clk_branch gcc_ahb2phy_usb_clk = {
 		},
 	},
 };
-/*
 
 static struct clk_branch gcc_apc_vs_clk = {
 	.halt_reg = 0x4204c,
@@ -2819,7 +2829,6 @@ static struct clk_branch gcc_ce1_clk = {
 	},
 };
 
-*/
 static struct clk_branch gcc_cfg_noc_usb3_prim_axi_clk = {
 	.halt_reg = 0x1a084,
 	.halt_check = BRANCH_HALT,
@@ -2837,7 +2846,6 @@ static struct clk_branch gcc_cfg_noc_usb3_prim_axi_clk = {
 		},
 	},
 };
-/*
 
 static struct clk_branch gcc_cpuss_gnoc_clk = {
 	.halt_reg = 0x2b004,
@@ -3693,7 +3701,6 @@ static struct clk_branch gcc_sys_noc_ufs_phy_axi_clk = {
 	},
 };
 
-*/
 static struct clk_branch gcc_sys_noc_usb3_prim_axi_clk = {
 	.halt_reg = 0x1a080,
 	.halt_check = BRANCH_HALT,
@@ -3711,7 +3718,6 @@ static struct clk_branch gcc_sys_noc_usb3_prim_axi_clk = {
 		},
 	},
 };
-/*
 
 static struct clk_branch gcc_ufs_mem_clkref_clk = {
 	.halt_reg = 0x8c000,
@@ -3847,7 +3853,6 @@ static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
 	},
 };
 
-*/
 static struct clk_branch gcc_usb30_prim_master_clk = {
 	.halt_reg = 0x1a010,
 	.halt_check = BRANCH_HALT,
@@ -3909,7 +3914,6 @@ static struct clk_branch gcc_usb3_prim_clkref_clk = {
 		},
 	},
 };
-/*
 
 static struct clk_branch gcc_usb3_prim_phy_com_aux_clk = {
 	.halt_reg = 0x1a054,
@@ -4141,9 +4145,7 @@ struct clk_hw *gcc_trinket_hws[] = {
 static struct clk_regmap *gcc_trinket_clocks[] = {
 	/*
 	[GCC_AHB2PHY_CSI_CLK] = &gcc_ahb2phy_csi_clk.clkr,
-	*/
 	[GCC_AHB2PHY_USB_CLK] = &gcc_ahb2phy_usb_clk.clkr,
-	/*
 	[GCC_APC_VS_CLK] = &gcc_apc_vs_clk.clkr,
 	[GCC_BIMC_GPU_AXI_CLK] = &gcc_bimc_gpu_axi_clk.clkr,
 	[GCC_BOOT_ROM_AHB_CLK] = &gcc_boot_rom_ahb_clk.clkr,
@@ -4229,9 +4231,7 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_CE1_AHB_CLK] = &gcc_ce1_ahb_clk.clkr,
 	[GCC_CE1_AXI_CLK] = &gcc_ce1_axi_clk.clkr,
 	[GCC_CE1_CLK] = &gcc_ce1_clk.clkr,
-	*/
 	[GCC_CFG_NOC_USB3_PRIM_AXI_CLK] = &gcc_cfg_noc_usb3_prim_axi_clk.clkr,
-	/*
 	[GCC_CPUSS_GNOC_CLK] = &gcc_cpuss_gnoc_clk.clkr,
 	[GCC_DISP_AHB_CLK] = &gcc_disp_ahb_clk.clkr,
 	[GCC_DISP_GPLL0_DIV_CLK_SRC] = &gcc_disp_gpll0_div_clk_src.clkr,
@@ -4309,9 +4309,7 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_SYS_NOC_COMPUTE_SF_AXI_CLK] = &gcc_sys_noc_compute_sf_axi_clk.clkr,
 	[GCC_SYS_NOC_CPUSS_AHB_CLK] = &gcc_sys_noc_cpuss_ahb_clk.clkr,
 	[GCC_SYS_NOC_UFS_PHY_AXI_CLK] = &gcc_sys_noc_ufs_phy_axi_clk.clkr,
-	*/
 	[GCC_SYS_NOC_USB3_PRIM_AXI_CLK] = &gcc_sys_noc_usb3_prim_axi_clk.clkr,
-	/*
 	[GCC_UFS_MEM_CLKREF_CLK] = &gcc_ufs_mem_clkref_clk.clkr,
 	[GCC_UFS_PHY_AHB_CLK] = &gcc_ufs_phy_ahb_clk.clkr,
 	[GCC_UFS_PHY_AXI_CLK] = &gcc_ufs_phy_axi_clk.clkr,
@@ -4325,14 +4323,12 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_UFS_PHY_UNIPRO_CORE_CLK] = &gcc_ufs_phy_unipro_core_clk.clkr,
 	[GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC] =
 		&gcc_ufs_phy_unipro_core_clk_src.clkr,
-	*/
 	[GCC_USB30_PRIM_MASTER_CLK] = &gcc_usb30_prim_master_clk.clkr,
 	[GCC_USB30_PRIM_MASTER_CLK_SRC] = &gcc_usb30_prim_master_clk_src.clkr,
 	[GCC_USB30_PRIM_MOCK_UTMI_CLK] = &gcc_usb30_prim_mock_utmi_clk.clkr,
 	[GCC_USB30_PRIM_MOCK_UTMI_CLK_SRC] =
 		&gcc_usb30_prim_mock_utmi_clk_src.clkr,
 	[GCC_USB30_PRIM_SLEEP_CLK] = &gcc_usb30_prim_sleep_clk.clkr,
-	/*
 	[GCC_USB3_PRIM_PHY_AUX_CLK_SRC] = &gcc_usb3_prim_phy_aux_clk_src.clkr,
 	[GCC_USB3_PRIM_PHY_COM_AUX_CLK] = &gcc_usb3_prim_phy_com_aux_clk.clkr,
 	[GCC_USB3_PRIM_PHY_PIPE_CLK] = &gcc_usb3_prim_phy_pipe_clk.clkr,
@@ -4348,9 +4344,7 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_VS_CTRL_CLK_SRC] = &gcc_vs_ctrl_clk_src.clkr,
 	[GCC_VSENSOR_CLK_SRC] = &gcc_vsensor_clk_src.clkr,
 	[GCC_WCSS_VS_CLK] = &gcc_wcss_vs_clk.clkr,
-	*/
 	[GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
-	/*
 	[GPLL3_OUT_EARLY] = &gpll3_out_early.clkr,
 	[GPLL4_OUT_MAIN] = &gpll4_out_main.clkr,
 	[GPLL5_OUT_MAIN] = &gpll5_out_main.clkr,
@@ -4358,8 +4352,8 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GPLL7_OUT_EARLY] = &gpll7_out_early.clkr,
 	[GPLL8_OUT_EARLY] = &gpll8_out_early.clkr,
 	[GPLL9_OUT_EARLY] = &gpll9_out_early.clkr,
-	*/
 	[GCC_USB3_PRIM_CLKREF_CLK] = &gcc_usb3_prim_clkref_clk.clkr,
+	*/
 };
 
 static const struct qcom_reset_map gcc_trinket_resets[] = {
@@ -4410,8 +4404,6 @@ static const struct qcom_cc_desc gcc_trinket_desc = {
 	.config = &gcc_trinket_regmap_config,
 	.clks = gcc_trinket_clocks,
 	.num_clks = ARRAY_SIZE(gcc_trinket_clocks),
-	.clk_hws = gcc_trinket_hws,
-	.num_clk_hws = ARRAY_SIZE(gcc_trinket_hws),
 	.resets = gcc_trinket_resets,
 	.num_resets = ARRAY_SIZE(gcc_trinket_resets),
 	.gdscs = NULL,

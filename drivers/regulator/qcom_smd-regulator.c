@@ -595,15 +595,6 @@ static const struct regulator_desc pms405_pldo600 = {
 	.ops = &rpm_smps_ldo_ops,
 };
 
-static const struct regulator_desc pm6125_ldo = {
-	.linear_ranges = (struct regulator_linear_range[]) {
-		REGULATOR_LINEAR_RANGE(0, 0, 199, 15000),
-	},
-	.n_linear_ranges = 1,
-	.n_voltages = 200,
-	.ops = &rpm_smps_ldo_ops,
-};
-
 struct rpm_regulator_data {
 	const char *name;
 	u32 type;
@@ -909,14 +900,6 @@ static const struct rpm_regulator_data rpm_pms405_regulators[] = {
 	{}
 };
 
-static const struct rpm_regulator_data rpm_pm6125_regulators[] = {
-	// TODO: add more
-	{ "l7", QCOM_SMD_RPM_LDOA, 1, &pm6125_ldo },
-	{ "l10", QCOM_SMD_RPM_LDOA, 2, &pm6125_ldo },
-	{ "l15", QCOM_SMD_RPM_LDOA, 3, &pm6125_ldo },
-	{},
-};
-
 static const struct of_device_id rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
@@ -928,7 +911,6 @@ static const struct of_device_id rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-pmi8994-regulators", .data = &rpm_pmi8994_regulators },
 	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
 	{ .compatible = "qcom,rpm-pms405-regulators", .data = &rpm_pms405_regulators },
-	{ .compatible = "qcom,rpm-pm6125-regulators", .data = &rpm_pm6125_regulators },
 	{}
 };
 MODULE_DEVICE_TABLE(of, rpm_of_match);
