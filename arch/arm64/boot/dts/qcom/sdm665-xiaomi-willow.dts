@@ -313,6 +313,7 @@
         reg = <0x1400000 0x1f0000>;
         #clock-cells = <1>;
         #reset-cells = <1>;
+        #power-domain-cells = <1>;
     };
 
     qupv3_0: geniqup@4ac0000 {
@@ -382,7 +383,6 @@
 
     usb0: ssusb@4e00000 {
         compatible = "qcom,dwc3";
-        // reg = <0x4e00000 0x100000>;
         reg = <0x4ef8800 0x400>;
         #address-cells = <1>;
         #size-cells = <1>;
@@ -405,8 +405,9 @@
 
         reset-names = "core_reset";
         resets = <&gcc GCC_USB30_PRIM_BCR>;
+        power-domains = <&gcc USB30_PRIM_GDSC>;
 
-        // qcom,select-utmi-as-pipe-clk;
+        qcom,select-utmi-as-pipe-clk;
 
         dwc3@4e00000 {
             compatible = "snps,dwc3";
@@ -416,13 +417,13 @@
             phys = <&qusb_phy0>;
             phy-names = "usb2-phy";
             tx-fifo-resize;
+            linux,sysdev_is_parent;
+            snps,disable-clk-gating;
             snps,dis_u2_susphy_quirk;
-            snps,dis_u3_susphy_quirk;
             snps,dis_enblslpm_quirk;
             snps,has-lpm-erratum;
             snps,hird-threshold = /bits/ 8 <0x10>;
             snps,usb3_lpm_capable;
-            snps,hsphy_interface = "utmi";
             maximum-speed = "high-speed";
             dr_mode = "peripheral";
         };

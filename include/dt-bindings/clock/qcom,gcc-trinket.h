@@ -236,4 +236,6 @@
 #define GCC_USB3PHY_PHY_PRIM_SP0_BCR		6
 #define GCC_CAMSS_MICRO_BCR			7
 
+#define USB30_PRIM_GDSC 0
+
 #endif

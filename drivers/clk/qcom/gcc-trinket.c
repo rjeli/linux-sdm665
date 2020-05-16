@@ -4431,6 +4431,19 @@ static const struct regmap_config gcc_trinket_regmap_config = {
 	.fast_io = true,
 };
 
+static struct gdsc usb30_prim_gdsc = {
+	.gdscr = 0x1a004,
+	.pd = {
+		.name = "usb30_prim_gdsc",
+	},
+	.pwrsts = PWRSTS_OFF_ON,
+	.flags = POLL_CFG_GDSCR | ALWAYS_ON,
+};
+
+static struct gdsc *gcc_trinket_gdscs[] = {
+	[USB30_PRIM_GDSC] = &usb30_prim_gdsc,
+};
+
 static const struct qcom_cc_desc gcc_trinket_desc = {
 	.config = &gcc_trinket_regmap_config,
 	.clks = gcc_trinket_clocks,
@@ -4439,8 +4452,8 @@ static const struct qcom_cc_desc gcc_trinket_desc = {
 	.num_clk_hws = ARRAY_SIZE(gcc_trinket_hws),
 	.resets = gcc_trinket_resets,
 	.num_resets = ARRAY_SIZE(gcc_trinket_resets),
-	.gdscs = NULL,
-	.num_gdscs = 0,
+	.gdscs = gcc_trinket_gdscs,
+	.num_gdscs = ARRAY_SIZE(gcc_trinket_gdscs),
 };
 
 static const struct of_device_id gcc_trinket_match_table[] = {
