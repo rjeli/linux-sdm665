@@ -309,6 +309,7 @@ static const char * const gcc_parent_names_14[] = {
 
 static struct clk_alpha_pll gpll0_out_early = {
 	.offset = 0x0,
+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
 	.clkr = {
 		.enable_reg = 0x79000,
 		.enable_mask = BIT(0),
@@ -389,6 +390,7 @@ static struct clk_alpha_pll gpll5_out_main = {
 */
 static struct clk_alpha_pll gpll6_out_early = {
 	.offset = 0x6000,
+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
 	.clkr = {
 		.enable_reg = 0x79000,
 		.enable_mask = BIT(6),
@@ -4372,13 +4374,13 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_VSENSOR_CLK_SRC] = &gcc_vsensor_clk_src.clkr,
 	[GCC_WCSS_VS_CLK] = &gcc_wcss_vs_clk.clkr,
 	*/
-	// [GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
+	[GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
 	/*
 	[GPLL3_OUT_EARLY] = &gpll3_out_early.clkr,
 	[GPLL4_OUT_MAIN] = &gpll4_out_main.clkr,
 	[GPLL5_OUT_MAIN] = &gpll5_out_main.clkr,
 	*/
-	// [GPLL6_OUT_EARLY] = &gpll6_out_early.clkr,
+	[GPLL6_OUT_EARLY] = &gpll6_out_early.clkr,
 	/*
 	[GPLL7_OUT_EARLY] = &gpll7_out_early.clkr,
 	[GPLL8_OUT_EARLY] = &gpll8_out_early.clkr,
