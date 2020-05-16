@@ -198,6 +198,8 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
 	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
 	int index;
 
+	printk(KERN_INFO "clk-rcg2: determining rate for %s\n", clk_hw_get_name(hw));
+
 	switch (policy) {
 	case FLOOR:
 		f = qcom_find_freq_floor(f, rate);
@@ -242,6 +244,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
 	req->best_parent_hw = p;
 	req->best_parent_rate = rate;
 	req->rate = f->freq;
+
+	printk(KERN_INFO "clk-rcg2: for %s, rate = %lu, parent_rate = %lu\n", 
+		clk_hw_get_name(hw), f->freq, rate);
 
 	return 0;
 }

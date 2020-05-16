@@ -386,6 +386,7 @@ static struct clk_alpha_pll gpll5_out_main = {
 	},
 };
 
+*/
 static struct clk_alpha_pll gpll6_out_early = {
 	.offset = 0x6000,
 	.clkr = {
@@ -410,6 +411,7 @@ static struct clk_fixed_factor gpll6_out_main = {
 		.ops = &clk_fixed_factor_ops,
 	},
 };
+/*
 
 static struct clk_alpha_pll gpll7_out_early = {
 	.offset = 0x7000,
@@ -1705,6 +1707,7 @@ static struct clk_branch gcc_ahb2phy_csi_clk = {
 	},
 };
 
+*/
 static struct clk_branch gcc_ahb2phy_usb_clk = {
 	.halt_reg = 0x1d008,
 	.halt_check = BRANCH_HALT,
@@ -1719,6 +1722,7 @@ static struct clk_branch gcc_ahb2phy_usb_clk = {
 		},
 	},
 };
+/*
 
 static struct clk_branch gcc_apc_vs_clk = {
 	.halt_reg = 0x4204c,
@@ -2833,6 +2837,7 @@ static struct clk_branch gcc_ce1_clk = {
 	},
 };
 
+*/
 static struct clk_branch gcc_cfg_noc_usb3_prim_axi_clk = {
 	.halt_reg = 0x1a084,
 	.halt_check = BRANCH_HALT,
@@ -2850,6 +2855,7 @@ static struct clk_branch gcc_cfg_noc_usb3_prim_axi_clk = {
 		},
 	},
 };
+/*
 
 static struct clk_branch gcc_cpuss_gnoc_clk = {
 	.halt_reg = 0x2b004,
@@ -3247,6 +3253,7 @@ static struct clk_branch gcc_qmip_video_vcodec_ahb_clk = {
 	},
 };
 
+*/
 static struct clk_branch gcc_qupv3_wrap0_core_2x_clk = {
 	.halt_reg = 0x1f014,
 	.halt_check = BRANCH_HALT_VOTED,
@@ -3272,6 +3279,7 @@ static struct clk_branch gcc_qupv3_wrap0_core_clk = {
 		},
 	},
 };
+/*
 
 static struct clk_branch gcc_qupv3_wrap0_s0_clk = {
 	.halt_reg = 0x1f144,
@@ -3705,6 +3713,7 @@ static struct clk_branch gcc_sys_noc_ufs_phy_axi_clk = {
 	},
 };
 
+*/
 static struct clk_branch gcc_sys_noc_usb3_prim_axi_clk = {
 	.halt_reg = 0x1a080,
 	.halt_check = BRANCH_HALT,
@@ -3722,6 +3731,7 @@ static struct clk_branch gcc_sys_noc_usb3_prim_axi_clk = {
 		},
 	},
 };
+/*
 
 static struct clk_branch gcc_ufs_mem_clkref_clk = {
 	.halt_reg = 0x8c000,
@@ -3860,7 +3870,8 @@ static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
 */
 static struct clk_branch gcc_usb30_prim_master_clk = {
 	.halt_reg = 0x1a010,
-	.halt_check = BRANCH_HALT,
+	// .halt_check = BRANCH_HALT,
+	.halt_check = BRANCH_HALT_SKIP,
 	.clkr = {
 		.enable_reg = 0x1a010,
 		.enable_mask = BIT(0),
@@ -3878,7 +3889,7 @@ static struct clk_branch gcc_usb30_prim_master_clk = {
 
 static struct clk_branch gcc_usb30_prim_mock_utmi_clk = {
 	.halt_reg = 0x1a018,
-	.halt_check = BRANCH_HALT,
+	.halt_check = BRANCH_HALT_SKIP,
 	.clkr = {
 		.enable_reg = 0x1a018,
 		.enable_mask = BIT(0),
@@ -3896,7 +3907,7 @@ static struct clk_branch gcc_usb30_prim_mock_utmi_clk = {
 
 static struct clk_branch gcc_usb30_prim_sleep_clk = {
 	.halt_reg = 0x1a014,
-	.halt_check = BRANCH_HALT,
+	.halt_check = BRANCH_HALT_SKIP,
 	.clkr = {
 		.enable_reg = 0x1a014,
 		.enable_mask = BIT(0),
@@ -4138,8 +4149,8 @@ static struct clk_dummy measure_only_ipa_2x_clk = {
 struct clk_hw *gcc_trinket_hws[] = {
 	[GPLL0_OUT_AUX2] = &gpll0_out_aux2.hw,
 	[GPLL0_OUT_MAIN] = &gpll0_out_main.hw,
-	/*
 	[GPLL6_OUT_MAIN] = &gpll6_out_main.hw,
+	/*
 	[GPLL7_OUT_MAIN] = &gpll7_out_main.hw,
 	[GPLL8_OUT_MAIN] = &gpll8_out_main.hw,
 	[GPLL9_OUT_MAIN] = &gpll9_out_main.hw,
@@ -4151,7 +4162,9 @@ struct clk_hw *gcc_trinket_hws[] = {
 static struct clk_regmap *gcc_trinket_clocks[] = {
 	/*
 	[GCC_AHB2PHY_CSI_CLK] = &gcc_ahb2phy_csi_clk.clkr,
+	*/
 	[GCC_AHB2PHY_USB_CLK] = &gcc_ahb2phy_usb_clk.clkr,
+	/*
 	[GCC_APC_VS_CLK] = &gcc_apc_vs_clk.clkr,
 	[GCC_BIMC_GPU_AXI_CLK] = &gcc_bimc_gpu_axi_clk.clkr,
 	[GCC_BOOT_ROM_AHB_CLK] = &gcc_boot_rom_ahb_clk.clkr,
@@ -4237,7 +4250,9 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_CE1_AHB_CLK] = &gcc_ce1_ahb_clk.clkr,
 	[GCC_CE1_AXI_CLK] = &gcc_ce1_axi_clk.clkr,
 	[GCC_CE1_CLK] = &gcc_ce1_clk.clkr,
+	*/
 	[GCC_CFG_NOC_USB3_PRIM_AXI_CLK] = &gcc_cfg_noc_usb3_prim_axi_clk.clkr,
+	/*
 	[GCC_CPUSS_GNOC_CLK] = &gcc_cpuss_gnoc_clk.clkr,
 	[GCC_DISP_AHB_CLK] = &gcc_disp_ahb_clk.clkr,
 	[GCC_DISP_GPLL0_DIV_CLK_SRC] = &gcc_disp_gpll0_div_clk_src.clkr,
@@ -4268,8 +4283,10 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_QMIP_DISP_AHB_CLK] = &gcc_qmip_disp_ahb_clk.clkr,
 	[GCC_QMIP_GPU_CFG_AHB_CLK] = &gcc_qmip_gpu_cfg_ahb_clk.clkr,
 	[GCC_QMIP_VIDEO_VCODEC_AHB_CLK] = &gcc_qmip_video_vcodec_ahb_clk.clkr,
+	*/
 	[GCC_QUPV3_WRAP0_CORE_2X_CLK] = &gcc_qupv3_wrap0_core_2x_clk.clkr,
 	[GCC_QUPV3_WRAP0_CORE_CLK] = &gcc_qupv3_wrap0_core_clk.clkr,
+	/*
 	[GCC_QUPV3_WRAP0_S0_CLK] = &gcc_qupv3_wrap0_s0_clk.clkr,
 	[GCC_QUPV3_WRAP0_S0_CLK_SRC] = &gcc_qupv3_wrap0_s0_clk_src.clkr,
 	[GCC_QUPV3_WRAP0_S1_CLK] = &gcc_qupv3_wrap0_s1_clk.clkr,
@@ -4315,7 +4332,9 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_SYS_NOC_COMPUTE_SF_AXI_CLK] = &gcc_sys_noc_compute_sf_axi_clk.clkr,
 	[GCC_SYS_NOC_CPUSS_AHB_CLK] = &gcc_sys_noc_cpuss_ahb_clk.clkr,
 	[GCC_SYS_NOC_UFS_PHY_AXI_CLK] = &gcc_sys_noc_ufs_phy_axi_clk.clkr,
+	*/
 	[GCC_SYS_NOC_USB3_PRIM_AXI_CLK] = &gcc_sys_noc_usb3_prim_axi_clk.clkr,
+	/*
 	[GCC_UFS_MEM_CLKREF_CLK] = &gcc_ufs_mem_clkref_clk.clkr,
 	[GCC_UFS_PHY_AHB_CLK] = &gcc_ufs_phy_ahb_clk.clkr,
 	[GCC_UFS_PHY_AXI_CLK] = &gcc_ufs_phy_axi_clk.clkr,
@@ -4353,12 +4372,14 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_VSENSOR_CLK_SRC] = &gcc_vsensor_clk_src.clkr,
 	[GCC_WCSS_VS_CLK] = &gcc_wcss_vs_clk.clkr,
 	*/
-	[GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
+	// [GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
 	/*
 	[GPLL3_OUT_EARLY] = &gpll3_out_early.clkr,
 	[GPLL4_OUT_MAIN] = &gpll4_out_main.clkr,
 	[GPLL5_OUT_MAIN] = &gpll5_out_main.clkr,
-	[GPLL6_OUT_EARLY] = &gpll6_out_early.clkr,
+	*/
+	// [GPLL6_OUT_EARLY] = &gpll6_out_early.clkr,
+	/*
 	[GPLL7_OUT_EARLY] = &gpll7_out_early.clkr,
 	[GPLL8_OUT_EARLY] = &gpll8_out_early.clkr,
 	[GPLL9_OUT_EARLY] = &gpll9_out_early.clkr,
@@ -4392,7 +4413,7 @@ static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
 	{ &gcc_qupv3_wrap1_s4_clk_src, DFS_ENABLE_RCG },
 	{ &gcc_qupv3_wrap1_s5_clk_src, DFS_ENABLE_RCG },
 	*/
-	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk_src),
+	// DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk_src),
 };
 
 /*
@@ -4479,8 +4500,7 @@ static int gcc_trinket_probe(struct platform_device *pdev)
 	}
 
 	/* DFS clock registration */
-	ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks, 
-		ARRAY_SIZE(gcc_dfs_clocks));
+	ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks, ARRAY_SIZE(gcc_dfs_clocks));
 	if (ret)
 		dev_err(&pdev->dev, "Failed to register with DFS!\n");
 

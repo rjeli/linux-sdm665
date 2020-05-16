@@ -5,6 +5,7 @@
  */
 
 #include <linux/clk-provider.h>
+#include <linux/clk.h>
 #include <linux/err.h>
 #include <linux/export.h>
 #include <linux/init.h>
@@ -761,9 +762,61 @@ static struct clk_smd_rpm *msm8998_clks[] = {
 	[RPM_SMD_RF_CLK3_A_PIN] = &msm8998_rf_clk3_a_pin,
 };
 
+// sdm665
+DEFINE_CLK_SMD_RPM_BRANCH(sdm665, bi_tcxo, bi_tcxo_ao, QCOM_SMD_RPM_MISC_CLK, 0, 19200000);
+DEFINE_CLK_SMD_RPM(sdm665, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+DEFINE_CLK_SMD_RPM(sdm665, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+DEFINE_CLK_SMD_RPM(sdm665, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+DEFINE_CLK_SMD_RPM_BRANCH(sdm665, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1, 19200000);
+DEFINE_CLK_SMD_RPM(sdm665, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
+DEFINE_CLK_SMD_RPM(sdm665, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
+DEFINE_CLK_SMD_RPM(sdm665, qup_clk, qup_a_clk, QCOM_SMD_RPM_QUP_CLK, 0);
+DEFINE_CLK_SMD_RPM(sdm665, mmnrt_clk, mmnrt_a_clk, QCOM_SMD_RPM_MMXI_CLK, 0);
+DEFINE_CLK_SMD_RPM(sdm665, mmrt_clk, mmrt_a_clk, QCOM_SMD_RPM_MMXI_CLK, 1);
+DEFINE_CLK_SMD_RPM(sdm665, snoc_periph_clk, snoc_periph_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+DEFINE_CLK_SMD_RPM(sdm665, snoc_lpass_clk, snoc_lpass_a_clk, QCOM_SMD_RPM_BUS_CLK, 5);
+
+DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm665, ln_bb_clk1, ln_bb_clk1_a, 1);
+DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm665, ln_bb_clk2, ln_bb_clk2_a, 2);
+DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm665, ln_bb_clk3, ln_bb_clk3_a, 3);
+DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm665, rf_clk1, rf_clk1_a, 4);
+DEFINE_CLK_SMD_RPM_XO_BUFFER(sdm665, rf_clk2, rf_clk2_a, 5);
+
 static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
 	.clks = msm8998_clks,
 	.num_clks = ARRAY_SIZE(msm8998_clks),
+};
+
+static struct clk_smd_rpm *sdm665_clks[] = {
+	[RPM_SMD_XO_CLK_SRC] = &sdm665_bi_tcxo,
+	[RPM_SMD_XO_A_CLK_SRC] = &sdm665_bi_tcxo_ao,
+	[RPM_SMD_SNOC_CLK] = &sdm665_snoc_clk,
+	[RPM_SMD_SNOC_A_CLK] = &sdm665_snoc_a_clk,
+	[RPM_SMD_BIMC_CLK] = &sdm665_bimc_clk,
+	[RPM_SMD_BIMC_A_CLK] = &sdm665_bimc_a_clk,
+	[RPM_SMD_QDSS_CLK] = &sdm665_qdss_clk,
+	[RPM_SMD_QDSS_A_CLK] = &sdm665_qdss_a_clk,
+	[RPM_SMD_RF_CLK1] = &sdm665_rf_clk1,
+	[RPM_SMD_RF_CLK1_A] = &sdm665_rf_clk1_a,
+	[RPM_SMD_RF_CLK2] = &sdm665_rf_clk2,
+	[RPM_SMD_RF_CLK2_A] = &sdm665_rf_clk2_a,
+	[RPM_SMD_LN_BB_CLK1] = &sdm665_ln_bb_clk1,
+	[RPM_SMD_LN_BB_CLK1_A] = &sdm665_ln_bb_clk1_a,
+	[RPM_SMD_LN_BB_CLK2] = &sdm665_ln_bb_clk2,
+	[RPM_SMD_LN_BB_CLK2_A] = &sdm665_ln_bb_clk2_a,
+	[RPM_SMD_LN_BB_CLK3] = &sdm665_ln_bb_clk3,
+	[RPM_SMD_LN_BB_CLK3_A] = &sdm665_ln_bb_clk3_a,
+	[RPM_SMD_CNOC_CLK] = &sdm665_cnoc_clk,
+	[RPM_SMD_CNOC_A_CLK] = &sdm665_cnoc_a_clk,
+	[RPM_SMD_QUP_CLK] = &sdm665_qup_clk,
+	[RPM_SMD_QUP_A_CLK] = &sdm665_qup_a_clk,
+	[RPM_SMD_SNOC_PERIPH_CLK] = &sdm665_snoc_periph_clk,
+	[RPM_SMD_SNOC_PERIPH_A_CLK] = &sdm665_snoc_periph_a_clk,
+};
+
+static const struct rpm_smd_clk_desc rpm_clk_sdm665 = {
+	.clks = sdm665_clks,
+	.num_clks = ARRAY_SIZE(sdm665_clks),
 };
 
 static const struct of_device_id rpm_smd_clk_match_table[] = {
@@ -773,6 +826,7 @@ static const struct of_device_id rpm_smd_clk_match_table[] = {
 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
 	{ .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
 	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
+	{ .compatible = "qcom,rpmcc-sdm665",  .data = &rpm_clk_sdm665  },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
@@ -799,6 +853,8 @@ static int rpm_smd_clk_probe(struct platform_device *pdev)
 	struct qcom_smd_rpm *rpm;
 	struct clk_smd_rpm **rpm_smd_clks;
 	const struct rpm_smd_clk_desc *desc;
+
+	printk(KERN_INFO "clk-smd-rpm: probing\n");
 
 	rpm = dev_get_drvdata(pdev->dev.parent);
 	if (!rpm) {
@@ -848,6 +904,15 @@ static int rpm_smd_clk_probe(struct platform_device *pdev)
 				     rcc);
 	if (ret)
 		goto err;
+
+	// keep active vote on cxo
+	clk_prepare_enable(sdm665_bi_tcxo_ao.hw.clk);
+	clk_set_rate(sdm665_cnoc_a_clk.hw.clk, 19200000);
+	clk_prepare_enable(sdm665_cnoc_a_clk.hw.clk);
+	clk_set_rate(sdm665_snoc_a_clk.hw.clk, 19200000);
+	clk_prepare_enable(sdm665_snoc_a_clk.hw.clk);
+
+	printk(KERN_INFO "clk-smd-rpm: registered clocks\n");
 
 	return 0;
 err:

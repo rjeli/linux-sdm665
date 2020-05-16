@@ -5,6 +5,8 @@
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 #include <dt-bindings/clock/qcom,gcc-trinket.h>
+#include <dt-bindings/clock/qcom,rpmcc.h>
+#include <dt-bindings/spmi/spmi.h>
 
 / {
     model = "Qualcomm Technologies, Inc. TRINKET SoC";
@@ -14,7 +16,9 @@
     qcom,board-id = <0x22 0x0>;
     qcom,msm-id = <0x18a 0x10000>;
     interrupt-parent = <&wakegic>;
-    chosen { };
+    chosen {
+        bootargs = "clk_ignore_unused";
+    };
     soc: soc { };
     aliases {
         serial0 = &qupv3_se4_2uart;
@@ -138,9 +142,16 @@
         };
     };
     reserved-memory {
-        #address-cells = <0x00000002>;
-        #size-cells = <0x00000002>;
+        #address-cells = <2>;
+        #size-cells = <2>;
         ranges;
+        ramoops_mem: ramoops@61600000 {
+            compatible = "ramoops";
+            reg = <0x0 0x61600000 0x0 0x400000>;
+            record-size = <0x80000>;
+            pmsg-size = <0x200000>;
+            console-size = <0x100000>;
+        };
     };
 };
 
@@ -269,6 +280,25 @@
         method = "smc";
     };
 
+    spmi_bus: spmi {
+        compatible = "qcom,spmi-pmic-arb";
+        reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+        reg = <0x1c40000 0x1100>,
+              <0x1e00000 0x2000000>,
+              <0x3e00000 0x100000>,
+              <0x3f00000 0xa0000>,
+              <0x1c0a000 0x26000>;
+        interrupt-names = "periph_irq";
+        interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+        qcom,ee = <0>;
+        qcom,channel = <0>;
+        #address-cells = <2>;
+        #size-cells = <0>;
+        interrupt-controller;
+        #interrupt-cells = <4>;
+        cell-index = <0>;
+    };
+
     restart@440b000 {
         compatible = "qcom,pshold";
         /*
@@ -304,14 +334,40 @@
         };
     };
 
+    apcs_glb: mailbox@f111000 {
+        compatible = "qcom,sdm665-apcs-hmss-global";
+        reg = <0xf111000 0x1000>;
+        #mbox-cells = <1>;
+    };
+
+    rpm_msg_ram: memory@45f0000 {
+        compatible = "qcom,rpm-msg-ram";
+        reg = <0x45f0000 0x7000>;
+    };
+
+    rpm-glink {
+        compatible = "qcom,glink-rpm";
+        interrupts = <GIC_SPI 194 IRQ_TYPE_EDGE_RISING>;
+        qcom,rpm-msg-ram = <&rpm_msg_ram>;
+        mboxes = <&apcs_glb 0>;
+        rpm-requests {
+            compatible = "qcom,rpm-sdm665";
+            qcom,glink-channels = "rpm_requests";
+            rpmcc: clock-controller {
+                compatible = "qcom,rpmcc-sdm665", "qcom,rpmcc";
+                #clock-cells = <1>;
+            };
+        };
+    };
+
     // usb HS phy
     qusb_phy0: qusb@1613000 {
         compatible = "qcom,sdm665-qusb2-phy";
         reg = <0x1613000 0x180>;
         #phy-cells = <0>;
 
-        // clock-names = "cfg_ahb", "ref";
-        // clocks = <&dummy DUMMY>, <&dummy DUMMY>;
+        clock-names = "cfg_ahb", "ref";
+        clocks = <&gcc GCC_AHB2PHY_USB_CLK>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
 
         // vdda-pll-supply = <&dummy>;
         // vdda-phy-dpdm-supply = <&dummy>;
@@ -335,10 +391,13 @@
         interrupt-names = "hs_phy_irq", "ss_phy_irq";
         interrupts = <GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
 
-        clock-names = "core", "mock_utmi", "sleep";
+        clock-names = "core", "mock_utmi", "sleep", "xo", "iface", "bus_aggr";
         clocks = <&gcc GCC_USB30_PRIM_MASTER_CLK>,
                  <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
+                 <&gcc GCC_SYS_NOC_USB3_PRIM_AXI_CLK>,
+                 <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>;
 
         assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
                           <&gcc GCC_USB30_PRIM_MASTER_CLK>;
@@ -356,8 +415,6 @@
             interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
             phys = <&qusb_phy0>;
             phy-names = "usb2-phy";
-            /*
-            usb-phy = <&qusb_phy0>, <&usb_nop_phy>;
             tx-fifo-resize;
             snps,dis_u2_susphy_quirk;
             snps,dis_u3_susphy_quirk;
@@ -366,9 +423,15 @@
             snps,hird-threshold = /bits/ 8 <0x10>;
             snps,usb3_lpm_capable;
             snps,hsphy_interface = "utmi";
-            */
             maximum-speed = "high-speed";
             dr_mode = "peripheral";
         };
+    };
+};
+
+&spmi_bus {
+    pm6125@0 {
+        compatible = "qcom,spmi-pmic";
+        reg = <0x0 SPMI_USID>;
     };
 };

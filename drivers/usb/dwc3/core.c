@@ -719,6 +719,7 @@ static bool dwc3_core_is_valid(struct dwc3 *dwc)
 	u32 reg;
 
 	reg = dwc3_readl(dwc->regs, DWC3_GSNPSID);
+	printk(KERN_INFO "got gnpsid %d %d\n", reg, (reg&DWC3_GSNPSID_MASK));
 
 	/* This should read as U3 followed by revision number */
 	if ((reg & DWC3_GSNPSID_MASK) == 0x55330000) {
@@ -806,6 +807,9 @@ static void dwc3_core_setup_global_control(struct dwc3 *dwc)
 	 */
 	if (dwc->revision < DWC3_REVISION_190A)
 		reg |= DWC3_GCTL_U2RSTECN;
+
+	if (dwc->disable_clk_gating)
+		reg |= DWC3_GCTL_DSBLCLKGTNG;
 
 	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
 }
@@ -1341,6 +1345,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
 				"snps,dis-tx-ipgap-linecheck-quirk");
 	dwc->parkmode_disable_ss_quirk = device_property_read_bool(dev,
 				"snps,parkmode-disable-ss-quirk");
+	dwc->disable_clk_gating = device_property_read_bool(dev,
+					"snps,disable-clk-gating");
 
 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
 				"snps,tx_de_emphasis_quirk");
@@ -1510,6 +1516,7 @@ static int dwc3_probe(struct platform_device *pdev)
 	printk(KERN_INFO "dwc3: enabling clocks\n");
 
 	ret = clk_bulk_prepare_enable(dwc->num_clks, dwc->clks);
+	printk(KERN_INFO "dwc3: clk_bulk_prepare_enable: %d\n", ret);
 	if (ret)
 		goto assert_reset;
 

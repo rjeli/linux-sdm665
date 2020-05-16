@@ -1235,6 +1235,8 @@ struct dwc3 {
 
 	unsigned		dis_metastability_quirk:1;
 
+	unsigned		disable_clk_gating:1;
+
 	u16			imod_interval;
 };
 
