@@ -290,6 +290,8 @@ static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
 	struct dwc3_qcom *qcom = data;
 	struct dwc3	*dwc = platform_get_drvdata(qcom->dwc3);
 
+	printk(KERN_INFO "dwc3_qcom: resume_irq\n");
+
 	/* If pm_suspended then let pm_resume take care of resuming h/w */
 	if (qcom->pm_suspended)
 		return IRQ_HANDLED;
@@ -352,6 +354,9 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
 		qcom->hs_phy_irq = irq;
 	}
 
+	printk(KERN_INFO "dwc3_qcom: skipping dp_hs_phy_irq and dm_hs_phy_irq");
+
+	/*
 	irq = dwc3_qcom_get_irq(pdev, "dp_hs_phy_irq",
 				pdata ? pdata->dp_hs_phy_irq_index : -1);
 	if (irq > 0) {
@@ -381,9 +386,11 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
 		}
 		qcom->dm_hs_phy_irq = irq;
 	}
+	*/
 
 	irq = dwc3_qcom_get_irq(pdev, "ss_phy_irq",
 				pdata ? pdata->ss_phy_irq_index : -1);
+	printk(KERN_INFO "dwc3_qcom: got ss_phy_irq: %d", irq);
 	if (irq > 0) {
 		irq_set_status_flags(irq, IRQ_NOAUTOEN);
 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
@@ -396,6 +403,9 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
 		}
 		qcom->ss_phy_irq = irq;
 	}
+	printk(KERN_INFO "dwc3_qcom: setup ss_phy_irq");
+	usleep_range(1000, 5000);
+	printk(KERN_INFO "dwc3_qcom: i slept!");
 
 	return 0;
 }
@@ -519,17 +529,23 @@ static int dwc3_qcom_of_register_core(struct platform_device *pdev)
 	struct device		*dev = &pdev->dev;
 	int			ret;
 
+	printk(KERN_INFO "dwc3_qcom: getting child\n");
+
 	dwc3_np = of_get_child_by_name(np, "dwc3");
 	if (!dwc3_np) {
 		dev_err(dev, "failed to find dwc3 core child\n");
 		return -ENODEV;
 	}
 
+	printk(KERN_INFO "dwc3_qcom: populating\n");
+
 	ret = of_platform_populate(np, NULL, NULL, dev);
 	if (ret) {
 		dev_err(dev, "failed to register dwc3 core - %d\n", ret);
 		return ret;
 	}
+
+	printk(KERN_INFO "dwc3_qcom: finding device\n");
 
 	qcom->dwc3 = of_find_device_by_node(dwc3_np);
 	if (!qcom->dwc3) {
@@ -559,6 +575,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 	int			ret, i;
 	bool			ignore_pipe_clk;
 
+	printk(KERN_INFO "dwc3_qcom: probing\n");
+
 	qcom = devm_kzalloc(&pdev->dev, sizeof(*qcom), GFP_KERNEL);
 	if (!qcom)
 		return -ENOMEM;
@@ -574,12 +592,16 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 		}
 	}
 
+	printk(KERN_INFO "dwc3_qcom: getting resets\n");
+
 	qcom->resets = devm_reset_control_array_get_optional_exclusive(dev);
 	if (IS_ERR(qcom->resets)) {
 		ret = PTR_ERR(qcom->resets);
 		dev_err(&pdev->dev, "failed to get resets, err=%d\n", ret);
 		return ret;
 	}
+
+	printk(KERN_INFO "dwc3_qcom: asserting resets\n");
 
 	ret = reset_control_assert(qcom->resets);
 	if (ret) {
@@ -589,17 +611,23 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 
 	usleep_range(10, 1000);
 
+	printk(KERN_INFO "dwc3_qcom: deasserting resets\n");
+
 	ret = reset_control_deassert(qcom->resets);
 	if (ret) {
 		dev_err(&pdev->dev, "failed to deassert resets, err=%d\n", ret);
 		goto reset_assert;
 	}
 
+	printk(KERN_INFO "dwc3_qcom: initing clocks\n");
+
 	ret = dwc3_qcom_clk_init(qcom, of_clk_get_parent_count(np));
 	if (ret) {
 		dev_err(dev, "failed to get clocks\n");
 		goto reset_assert;
 	}
+
+	printk(KERN_INFO "dwc3_qcom: getting mem\n");
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
@@ -616,6 +644,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 			qcom->acpi_pdata->qscratch_base_size;
 	}
 
+	printk(KERN_INFO "dwc3_qcom: getting qscratch\n");
+
 	qcom->qscratch_base = devm_ioremap_resource(dev, parent_res);
 	if (IS_ERR(qcom->qscratch_base)) {
 		dev_err(dev, "failed to map qscratch, err=%d\n", ret);
@@ -623,11 +653,15 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 		goto clk_disable;
 	}
 
+	printk(KERN_INFO "dwc3_qcom: setting up irqs\n");
+
 	ret = dwc3_qcom_setup_irq(pdev);
 	if (ret) {
 		dev_err(dev, "failed to setup IRQs, err=%d\n", ret);
 		goto clk_disable;
 	}
+
+	printk(KERN_INFO "dwc3_qcom: setting up pipe-clk\n");
 
 	/*
 	 * Disable pipe_clk requirement if specified. Used when dwc3
@@ -637,6 +671,9 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 				"qcom,select-utmi-as-pipe-clk");
 	if (ignore_pipe_clk)
 		dwc3_qcom_select_utmi_clk(qcom);
+
+	printk(KERN_INFO "dwc3_qcom: registering core\n");
+	usleep_range(50000, 100000);
 
 	if (np)
 		ret = dwc3_qcom_of_register_core(pdev);
@@ -648,16 +685,28 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
 		goto depopulate;
 	}
 
+	printk(KERN_INFO "dwc3_qcom: getting dr mode\n");
+	usleep_range(50000, 100000);
+
 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+
+	printk(KERN_INFO "dwc3_qcom: enabling vbus override\n");
+	usleep_range(50000, 100000);
 
 	/* enable vbus override for device mode */
 	if (qcom->mode == USB_DR_MODE_PERIPHERAL)
 		dwc3_qcom_vbus_overrride_enable(qcom, true);
 
+	printk(KERN_INFO "dwc3_qcom: registering extcon\n");
+	usleep_range(50000, 100000);
+
 	/* register extcon to override sw_vbus on Vbus change later */
 	ret = dwc3_qcom_register_extcon(qcom);
 	if (ret)
 		goto depopulate;
+
+	printk(KERN_INFO "dwc3_qcom: initing wakeup\n");
+	usleep_range(50000, 100000);
 
 	device_init_wakeup(&pdev->dev, 1);
 	qcom->is_suspended = false;

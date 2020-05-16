@@ -1436,11 +1436,15 @@ static int dwc3_probe(struct platform_device *pdev)
 
 	void __iomem		*regs;
 
+	printk(KERN_INFO "dwc3: probing\n");
+
 	dwc = devm_kzalloc(dev, sizeof(*dwc), GFP_KERNEL);
 	if (!dwc)
 		return -ENOMEM;
 
 	dwc->dev = dev;
+
+	printk(KERN_INFO "dwc3: getting mem\n");
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (!res) {
@@ -1461,6 +1465,8 @@ static int dwc3_probe(struct platform_device *pdev)
 	dwc_res = *res;
 	dwc_res.start += DWC3_GLOBALS_REGS_START;
 
+	printk(KERN_INFO "dwc3: mapping mem\n");
+
 	regs = devm_ioremap_resource(dev, &dwc_res);
 	if (IS_ERR(regs))
 		return PTR_ERR(regs);
@@ -1468,11 +1474,17 @@ static int dwc3_probe(struct platform_device *pdev)
 	dwc->regs	= regs;
 	dwc->regs_size	= resource_size(&dwc_res);
 
+	printk(KERN_INFO "dwc3: getting props\n");
+
 	dwc3_get_properties(dwc);
+
+	printk(KERN_INFO "dwc3: getting reset\n");
 
 	dwc->reset = devm_reset_control_array_get(dev, true, true);
 	if (IS_ERR(dwc->reset))
 		return PTR_ERR(dwc->reset);
+
+	printk(KERN_INFO "dwc3: getting clocks\n");
 
 	if (dev->of_node) {
 		ret = devm_clk_bulk_get_all(dev, &dwc->clks);
@@ -1489,9 +1501,13 @@ static int dwc3_probe(struct platform_device *pdev)
 
 	}
 
+	printk(KERN_INFO "dwc3: deasserting resets\n");
+
 	ret = reset_control_deassert(dwc->reset);
 	if (ret)
 		return ret;
+
+	printk(KERN_INFO "dwc3: enabling clocks\n");
 
 	ret = clk_bulk_prepare_enable(dwc->num_clks, dwc->clks);
 	if (ret)
@@ -1502,6 +1518,8 @@ static int dwc3_probe(struct platform_device *pdev)
 		ret = -ENODEV;
 		goto disable_clks;
 	}
+
+	printk(KERN_INFO "dwc3: setting drvdata\n");
 
 	platform_set_drvdata(pdev, dwc);
 	dwc3_cache_hwparams(dwc);
@@ -1525,6 +1543,8 @@ static int dwc3_probe(struct platform_device *pdev)
 		goto err2;
 	}
 
+	printk(KERN_INFO "dwc3: getting dr_mode\n");
+
 	ret = dwc3_get_dr_mode(dwc);
 	if (ret)
 		goto err3;
@@ -1532,6 +1552,8 @@ static int dwc3_probe(struct platform_device *pdev)
 	ret = dwc3_alloc_scratch_buffers(dwc);
 	if (ret)
 		goto err3;
+
+	printk(KERN_INFO "dwc3: initing core\n");
 
 	ret = dwc3_core_init(dwc);
 	if (ret) {
@@ -1541,6 +1563,8 @@ static int dwc3_probe(struct platform_device *pdev)
 	}
 
 	dwc3_check_params(dwc);
+
+	printk(KERN_INFO "dwc3: initing core mode\n");
 
 	ret = dwc3_core_init_mode(dwc);
 	if (ret)
