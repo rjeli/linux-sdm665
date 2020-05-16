@@ -4353,7 +4353,7 @@ static struct clk_regmap *gcc_trinket_clocks[] = {
 	[GCC_VSENSOR_CLK_SRC] = &gcc_vsensor_clk_src.clkr,
 	[GCC_WCSS_VS_CLK] = &gcc_wcss_vs_clk.clkr,
 	*/
-	// [GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
+	[GPLL0_OUT_EARLY] = &gpll0_out_early.clkr,
 	/*
 	[GPLL3_OUT_EARLY] = &gpll3_out_early.clkr,
 	[GPLL4_OUT_MAIN] = &gpll4_out_main.clkr,
