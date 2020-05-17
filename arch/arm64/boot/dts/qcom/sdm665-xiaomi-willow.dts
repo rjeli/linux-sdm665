@@ -299,6 +299,18 @@
         cell-index = <0>;
     };
 
+    qcom,msm-imem@c125000 {
+        compatible = "qcom,msm-imem";
+        reg = <0xc125000 0x1000>;
+        ranges = <0x0 0xc125000 0x1000>;
+        #address-cells = <1>;
+        #size-cells = <1>;
+        restart-reason@65c {
+            compatible = "qcom,msm-imem-restart-reason";
+            reg = <0x65c 4>;
+        };
+    };
+
     restart@440b000 {
         compatible = "qcom,pshold";
         /*
@@ -432,7 +444,35 @@
 
 &spmi_bus {
     pm6125@0 {
-        compatible = "qcom,spmi-pmic";
+        compatible = "qcom,pm6125", "qcom,spmi-pmic";
         reg = <0x0 SPMI_USID>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        pon@800 {
+            compatible = "qcom,pm6125-pon";
+            reg = <0x800>;
+            mode-bootloader = <0x2>;
+            mode-recovery = <0x1>;
+
+            /*
+            pwrkey {
+                compatible = "qcom,pm6125-pwrkey";
+                // TODO: fix
+                interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+                debounce = <15625>;
+                bias-pull-up;
+                linux,code = <KEY_POWER>;
+            };
+
+            watchdog {
+                compatible = "qcom,pm6125-wdt";
+                // TODO: fix
+                interrupts = <0x0 0x8 6 IRQ_TYPE_EDGE_RISING>;
+                timeout-sec = <60>;
+            };
+            */
+        };
+
     };
 };
