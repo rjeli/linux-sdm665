@@ -38,6 +38,7 @@ description: |
         msm8996
         sc7180
         sdm845
+        sm6125
 
   The 'board' element must be one of the following strings:
 
@@ -157,5 +158,10 @@ properties:
           - enum:
               - qcom,ipq6018-cp01-c1
           - const: qcom,ipq6018
+
+      - items:
+          - enum:
+              - xiaomi,willow
+          - const: qcom,sm6125
 
 ...
