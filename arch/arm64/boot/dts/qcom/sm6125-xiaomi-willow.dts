@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (c) 2020, Eli Riggs <eli@rje.li>
+
+/dts-v1/;
+
+#include "sm6125.dtsi"
+
+/ {
+	model = "Xiaomi Redmi Note 8T";
+	compatible = "xiaomi,willow", "qcom,sm6125";
+
+	aliases {
+		serial0 = &qupv3_se4_2uart;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+};
