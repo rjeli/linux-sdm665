@@ -133,5 +133,11 @@
 #define RPM_SMD_RF_CLK3_A			87
 #define RPM_SMD_RF_CLK3_PIN			88
 #define RPM_SMD_RF_CLK3_A_PIN			89
+#define RPM_SMD_LN_BB_CLK3			90
+#define RPM_SMD_LN_BB_CLK3_A			91
+#define RPM_SMD_QUP_CLK				92
+#define RPM_SMD_QUP_A_CLK			93
+#define RPM_SMD_SNOC_PERIPH_CLK			94
+#define RPM_SMD_SNOC_PERIPH_A_CLK		95
 
 #endif
