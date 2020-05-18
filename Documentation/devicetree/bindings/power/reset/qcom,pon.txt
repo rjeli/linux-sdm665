@@ -10,6 +10,7 @@ Required Properties:
 	"qcom,pm8916-pon"
 	"qcom,pms405-pon"
 	"qcom,pm8998-pon"
+	"qcom,pm6125-pon"
 
 -reg: Specifies the physical address of the pon register
 

@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+// Copyright (C) 2019 XiaoMi, Inc.
+// Copyright (C) 2020 Eli Riggs <eli@rje.li>
+
+#include <dt-bindings/spmi/spmi.h>
+
+&spmi_bus {
+	pm6125@0 {
+		compatible = "qcom,pm6125", "qcom,spmi-pmic";
+		reg = <0x0 SPMI_USID>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		pon@800 {
+			compatible = "qcom,pm6125-pon";
+			reg = <0x800>;
+			mode-recovery = <0x1>;
+			mode-bootloader = <0x2>;
+		};
+	};
+};

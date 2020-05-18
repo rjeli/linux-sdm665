@@ -4,6 +4,7 @@
 /dts-v1/;
 
 #include "sm6125.dtsi"
+#include "pm6125.dtsi"
 
 / {
 	model = "Xiaomi Redmi Note 8T";
