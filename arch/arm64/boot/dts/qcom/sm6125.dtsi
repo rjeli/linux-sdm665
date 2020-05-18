@@ -4,6 +4,7 @@
 // Copyright (C) 2020 Eli Riggs <eli@rje.li>
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/clock/qcom,gcc-sm6125.h>
 
 / {
 	interrupt-parent = <&intc>;
@@ -175,6 +176,14 @@
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
+		gcc: clock-controller@1400000 {
+			compatible = "qcom,gcc-sm6125";
+			reg = <0x1400000 0x1f0000>;
+			#clock-cells = <1>;
+			#reset-cells = <1>;
+			#power-domain-cells = <1>;
+		};
+
 		apcs_glb: mailbox@f111000 {
 			compatible = "qcom,sm6125-apcs-hmss-global";
 			reg = <0xf111000 0x1000>;
@@ -234,7 +243,8 @@
 			compatible = "qcom,geni-se-qup";
 			reg = <0x4ac0000 0x2000>;
 			clock-names = "m-ahb", "s-ahb";
-			clocks = <&xo_board>, <&xo_board>;
+			clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
+				 <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges;
@@ -244,7 +254,7 @@
 				reg = <0x4a90000 0x4000>;
 				interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>;
 				clock-names = "se";
-				clocks = <&xo_board>;
+				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
 			};
 		};
 	};

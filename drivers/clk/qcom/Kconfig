@@ -368,6 +368,14 @@ config SDM_LPASSCC_845
 	  Say Y if you want to use the LPASS branch clocks of the LPASS clock
 	  controller to reset the LPASS subsystem.
 
+config SM_GCC_6125
+	tristate "SM6125 Global Clock Controller"
+	select QCOM_GDSC
+	help
+	  Support for the global clock controller on SM6125 devices.
+	  Say Y if you want to use peripheral devices such as UART,
+	  SPI, I2C, USB, SD/UFS, PCIe etc.
+
 config SM_GCC_8150
 	tristate "SM8150 Global Clock Controller"
 	help
