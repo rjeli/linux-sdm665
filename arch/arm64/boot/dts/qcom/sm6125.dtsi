@@ -41,6 +41,13 @@
 			capacity-dmips-mhz = <1638>;
 			d-cache-size = <0x10000>;
 			i-cache-size = <0x10000>;
+			next-level-cache = <&L2_0>;
+			#cooling-cells = <2>;
+			L2_0: l2-cache {
+				compatible = "arm,arch-cache";
+				cache-size = <0x100000>;
+				cache-level = <2>;
+			};
 		};
 		CPU1: cpu@101 {
 			device_type = "cpu";
@@ -50,6 +57,8 @@
 			capacity-dmips-mhz = <1638>;
 			d-cache-size = <0x10000>;
 			i-cache-size = <0x10000>;
+			next-level-cache = <&L2_0>;
+			#cooling-cells = <2>;
 		};
 		CPU2: cpu@102 {
 			device_type = "cpu";
@@ -59,6 +68,8 @@
 			capacity-dmips-mhz = <1638>;
 			d-cache-size = <0x10000>;
 			i-cache-size = <0x10000>;
+			next-level-cache = <&L2_0>;
+			#cooling-cells = <2>;
 		};
 		CPU3: cpu@103 {
 			device_type = "cpu";
@@ -68,6 +79,8 @@
 			capacity-dmips-mhz = <1638>;
 			d-cache-size = <0x10000>;
 			i-cache-size = <0x10000>;
+			next-level-cache = <&L2_0>;
+			#cooling-cells = <2>;
 		};
 		CPU4: cpu@0 {
 			device_type = "cpu";
@@ -77,6 +90,13 @@
 			capacity-dmips-mhz = <1024>;
 			d-cache-size = <0x8000>;
 			i-cache-size = <0x8000>;
+			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
+			L2_1: l2-cache {
+				compatible = "arm,arch-cache";
+				cache-size = <0x80000>;
+				cache-level = <2>;
+			};
 		};
 		CPU5: cpu@1 {
 			device_type = "cpu";
@@ -86,6 +106,8 @@
 			capacity-dmips-mhz = <1024>;
 			d-cache-size = <0x8000>;
 			i-cache-size = <0x8000>;
+			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 		};
 		CPU6: cpu@2 {
 			device_type = "cpu";
@@ -95,6 +117,8 @@
 			capacity-dmips-mhz = <1024>;
 			d-cache-size = <0x8000>;
 			i-cache-size = <0x8000>;
+			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 		};
 		CPU7: cpu@3 {
 			device_type = "cpu";
@@ -104,6 +128,8 @@
 			capacity-dmips-mhz = <1024>;
 			d-cache-size = <0x8000>;
 			i-cache-size = <0x8000>;
+			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 		};
 		cpu-map {
 			cluster0 {
