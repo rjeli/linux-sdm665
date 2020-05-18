@@ -175,6 +175,32 @@
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
+		apcs_glb: mailbox@f111000 {
+			compatible = "qcom,sm6125-apcs-hmss-global";
+			reg = <0xf111000 0x1000>;
+			#mbox-cells = <1>;
+		};
+
+		rpm_msg_ram: memory@45f0000 {
+			compatible = "qcom,rpm-msg-ram";
+			reg = <0x45f0000 0x7000>;
+		};
+
+		rpm-glink {
+			compatible = "qcom,glink-rpm";
+			interrupts = <GIC_SPI 194 IRQ_TYPE_EDGE_RISING>;
+			qcom,rpm-msg-ram = <&rpm_msg_ram>;
+			mboxes = <&apcs_glb 0>;
+			rpm-requests {
+				compatible = "qcom,rpm-sm6125";
+				qcom,glink-channels = "rpm_requests";
+				rpmcc: clock-controller {
+					compatible = "qcom,rpmcc-sm6125", "qcom,rpmcc";
+					#clock-cells = <1>;
+				};
+			};
+		};
+
 		/* This GENI and its children actually use GCC clocks,
 		 * but the bootloader has already set them up for us.
 		 * xo_board is used as a dummy here so the driver doesn't
