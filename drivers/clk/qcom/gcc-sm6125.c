@@ -3530,8 +3530,7 @@ static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
 
 static struct clk_branch gcc_usb30_prim_master_clk = {
 	.halt_reg = 0x1a010,
-	// .halt_check = BRANCH_HALT,
-	.halt_check = BRANCH_HALT_SKIP,
+	.halt_check = BRANCH_HALT,
 	.clkr = {
 		.enable_reg = 0x1a010,
 		.enable_mask = BIT(0),
@@ -3549,7 +3548,7 @@ static struct clk_branch gcc_usb30_prim_master_clk = {
 
 static struct clk_branch gcc_usb30_prim_mock_utmi_clk = {
 	.halt_reg = 0x1a018,
-	.halt_check = BRANCH_HALT_SKIP,
+	.halt_check = BRANCH_HALT,
 	.clkr = {
 		.enable_reg = 0x1a018,
 		.enable_mask = BIT(0),
@@ -3567,7 +3566,7 @@ static struct clk_branch gcc_usb30_prim_mock_utmi_clk = {
 
 static struct clk_branch gcc_usb30_prim_sleep_clk = {
 	.halt_reg = 0x1a014,
-	.halt_check = BRANCH_HALT_SKIP,
+	.halt_check = BRANCH_HALT,
 	.clkr = {
 		.enable_reg = 0x1a014,
 		.enable_mask = BIT(0),
