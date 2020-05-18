@@ -50,6 +50,7 @@ properties:
       - qcom,gcc-sdm630
       - qcom,gcc-sdm660
       - qcom,gcc-sdm845
+      - qcom,gcc-sm6125
 
   '#clock-cells':
     const: 1

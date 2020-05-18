@@ -9,6 +9,9 @@
 	model = "Xiaomi Redmi Note 8T";
 	compatible = "xiaomi,willow", "qcom,sm6125";
 
+	qcom,board-id = <0x22 0x0>;
+	qcom,msm-id = <0x18a 0x10000>;
+
 	aliases {
 		serial0 = &qupv3_se4_2uart;
 	};
