@@ -234,11 +234,6 @@
 			cell-index = <0>;
 		};
 
-		/* This GENI and its children actually use GCC clocks,
-		 * but the bootloader has already set them up for us.
-		 * xo_board is used as a dummy here so the driver doesn't
-		 * give up.
-		 */
 		qupv3_0: geniqup@4ac0000 {
 			compatible = "qcom,geni-se-qup";
 			reg = <0x4ac0000 0x2000>;
