@@ -309,5 +309,27 @@
 				dr_mode = "peripheral";
 			};
 		};
+
+		sdhc_1: sdhci@4744000 {
+			compatible = "qcom,sm6125-sdhci", "qcom,sdhci-msm-v5";
+			reg-names = "hc", "cqhci";
+			reg = <0x4744000 0x1000>, <0x4745000 0x1000>;
+
+			interrupt-names = "hc_irq", "pwr_irq";
+			interrupts = <GIC_SPI 348 IRQ_TYPE_LEVEL_HIGH>,
+				     <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
+
+			clock-names = "iface", "core";
+			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
+				 <&gcc GCC_SDCC1_APPS_CLK>;
+
+			bus-width = <8>;
+			non-removable;
+			supports-cqe;
+
+			mmc-ddr-1_8v;
+			mmc-hs200-1_8v;
+			mmc-hs400-1_8v;
+		};
 	};
 };
