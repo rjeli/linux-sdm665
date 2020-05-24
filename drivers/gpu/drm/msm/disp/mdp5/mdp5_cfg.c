@@ -866,13 +866,46 @@ static const struct mdp5_cfg_hw sm6125_config = {
 		.base = {},
 		.caps = 0,
 	},
-	.lm = {},
-	.dspp = {},
-	.ad = {},
-	.pp = {},
-	.cdm = {},
-	.dsc = {},
-	.intf = {},
+	.lm = {
+		.count = 6,
+		.base = { 0x45000, 0x46000 },
+		.instances = {
+				{ .id = 0, .pp = 0, .dspp = 0,
+				  .caps = MDP_LM_CAP_DISPLAY },
+				{ .id = 1, .pp = -1, .dspp = -1,
+				  .caps = MDP_LM_CAP_WB, },
+			     },
+		.nb_stages = 8,
+		.max_width = 2560,
+		.max_height = 0xFFFF,
+	},
+	.dspp = {
+		.count = 1,
+		.base = { 0x55000 },
+	},
+	.ad = {
+		.count = 0,
+		.base = {},
+	},
+	.pp = {
+		.count = 2,
+		.base = { 0x71000, 0x71800 },
+	},
+	.cdm = {
+		.count = 0,
+		.base = {},
+	},
+	.dsc = {
+		.count = 0,
+		.base = {},
+	},
+	.intf = {
+		.base = { 0x6b000, 0x6b800 },
+		.connect = {
+			[0] = INTF_DISABLED,
+			[1] = INTF_DSI,
+		},
+	},
 	.max_clk = 307000000,
 };
 
@@ -892,7 +925,7 @@ static const struct mdp5_cfg_handler cfg_handlers_v3[] = {
 };
 
 static const struct mdp5_cfg_handler cfg_handlers_v5[] = {
-	/* { .revision = 4, .config = { .hw = &sm6125_config } }, */
+	{ .revision = 4, .config = { .hw = &sm6125_config } },
 };
 
 static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev);
