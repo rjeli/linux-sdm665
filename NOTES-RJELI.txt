@@ -1,0 +1,109 @@
+REGULATORS:
+
+msm8998.dtsi:
+
+	- Root node has rpm-glink > rpmpd "qcom,msm8998-rpmpd"
+		- power-domain-cells = <1>
+		- operating-points and opp_table
+
+	- SOC:
+		- e.g. qmp-pcie-phy uses
+			- vdda-phy-supply = <&vreg_l1a_0p875>
+
+	- Seems that NO OTHER REG INFO in msm9998.dtsi
+
+msm8998-mtp.dtsi:
+
+	- includes "pm8998.dtsi", "pmi8998.dtsi", "pm8005.dtsi"
+
+	- defines on root: vph_pwr:
+		compatible = "regulator-fixed"
+		regulator-name = "vph_pwr"
+		regulator-always-on; regulator-boot-on;
+
+	- on &pm8005_lsid1 > pm8005-regulators:
+		- vdd_s1-supply = <&vph_pwr>
+		- pm8005_s1: s1 { MICROVOLT RANGE }
+
+	- on &rpm_requests (which is defined in msm8998.dtsi under rpm-glink)
+
+		pm8998-regulators {
+			compatible = "qcom,rpm-pm8998-regulators" // driver qcom_smd-regulator
+
+			vdd_s1-supply = <&vph_pwr>; // FIXED REGULATOR
+			vdd_s2-supply = <&vph_pwr>;
+			...
+			vdd_l1_l27-supply = <&vreg_s7a_1p025>; // SOME OF THESE DEFINED BELOW
+			...
+			vdd_l10_l23_l25-supply = <&vreg_bob>; // BOB DEFINED IN PMI
+			...
+
+			vreg_s3a_1p35: s3: { MICROVOLT RANGE }
+			...
+		}
+
+		pmi8998-regulators {
+			compatible = "qcom,rpm-pmi8998-regulators"; // driver qcom_smd-regulator
+			vdd-bob-supply = <&vph_pwr>;
+			vreg_bob: bob { MICROVOLT RANGE }
+		}
+
+pm8998.dtsi:
+	- on &spmi_bus:
+		- pm8998_lsid0: pmic@0 "qcom,pm8998", "qcom,spmi-pmic"
+			pon, temp, coincell, die_temp adc, rtc, gpio ("qcom,pm8998-gpio"), etc
+		- pm8998_lsid1: pmic@1 "qcom,pm8998", "qcom,spmi-pmic"
+
+pmi8998.dtsi:
+	- on &spmi_bus:
+		- pmi8998_lsid0: pmic@2 "qcom,pmi8998", "qcom,spmi-pmic"
+			qcom,pmi8998-gpio
+		- pmi8998_lsid1: pmic@3 "qcom,pmi8998"
+
+pm8005.dtsi:
+	- on &spmi_bus:
+		- pm8005_lsid0: pmic@4
+			qcom,pm8005-gpio
+		- pm8005_lsid1: pmic@5
+
+qcom_smd-regulator.c:
+
+data table format:
+	char *name, int type, int id, regulator_desc *desc, char *supply
+
+types are hex constants in smd-rpm.h, used to address the resources on the RPM
+regulator_desc is standard linux regulator framework obj
+	- has linear microvoltage ranges with selector range and uv steps
+
+- qcom,rpm-pm8998-regulators:
+
+	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8998_ftsmps, "vdd_s1" },
+	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8998_ftsmps, "vdd_s2" },
+	...
+	{ "l1", QCOM_SMD_RPM_LDOA, 1, &pm8998_nldo, "vdd_l1_l27" },
+	{ "l2", QCOM_SMD_RPM_LDOA, 2, &pm8998_nldo, "vdd_l2_l8_l17" },
+	{ "l3", QCOM_SMD_RPM_LDOA, 3, &pm8998_nldo, "vdd_l3_l11" },
+	...
+	{ "lvs1", QCOM_SMD_RPM_VSA, 1, &pm8998_switch, "vdd_lvs1_lvs2" },
+	{ "lvs2", QCOM_SMD_RPM_VSA, 2, &pm8998_switch, "vdd_lvs1_lvs2" },
+	...
+
+- qcom,rpm-pmi8998-regulators:
+
+REGULATOR_LINEAR_RANGE(min_uV, min_sel, max_sel, step_uV)
+
+static const struct regulator_desc pmi8998_bob = {
+	.linear_ranges = (struct regulator_linear_range[]) {
+		REGULATOR_LINEAR_RANGE(1824000, 0, 83, 32000),
+	},
+	.n_linear_ranges = 1,
+	.n_voltages = 84,
+	.ops = &rpm_bob_ops,
+};
+
+vs
+
+vreg_bob: bob {
+	regulator-min-microvolt = <3312000>;
+	regulator-max-microvolt = <3600000>;
+};

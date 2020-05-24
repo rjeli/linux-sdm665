@@ -835,6 +835,47 @@ static const struct mdp5_cfg_hw msm8998_config = {
 	.max_clk = 412500000,
 };
 
+static const struct mdp5_cfg_hw sm6125_config = {
+	.name = "sm6125",
+	.mdp = {
+		.count = 1,
+		.caps = 0,
+	},
+	.ctl = {
+		.count = 6,
+		.base = { 0x2000, 0x2200, 0x2400, 0x2600, 0x2800, 0x2a00 },
+		.flush_hw_mask = 0xf4ffffff, /* guess */
+	},
+	.pipe_vig = {
+		.count = 1,
+		.base = { 0x5000 },
+		.caps = 0,
+	},
+	.pipe_rgb = {
+		.count = 0,
+		.base = {},
+		.caps = 0,
+	},
+	.pipe_dma = {
+		.count = 2,
+		.base = { 0x25000, 0x27000 },
+		.caps = 0,
+	},
+	.pipe_cursor = {
+		.count = 0,
+		.base = {},
+		.caps = 0,
+	},
+	.lm = {},
+	.dspp = {},
+	.ad = {},
+	.pp = {},
+	.cdm = {},
+	.dsc = {},
+	.intf = {},
+	.max_clk = 307000000,
+};
+
 static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
 	{ .revision = 0, .config = { .hw = &msm8x74v1_config } },
 	{ .revision = 2, .config = { .hw = &msm8x74v2_config } },
@@ -848,6 +889,10 @@ static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
 
 static const struct mdp5_cfg_handler cfg_handlers_v3[] = {
 	{ .revision = 0, .config = { .hw = &msm8998_config } },
+};
+
+static const struct mdp5_cfg_handler cfg_handlers_v5[] = {
+	/* { .revision = 4, .config = { .hw = &sm6125_config } }, */
 };
 
 static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev);
@@ -896,6 +941,10 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
 	case 3:
 		cfg_handlers = cfg_handlers_v3;
 		num_handlers = ARRAY_SIZE(cfg_handlers_v3);
+		break;
+	case 5:
+		cfg_handlers = cfg_handlers_v5;
+		num_handlers = ARRAY_SIZE(cfg_handlers_v5);
 		break;
 	default:
 		DRM_DEV_ERROR(dev->dev, "unexpected MDP major version: v%d.%d\n",

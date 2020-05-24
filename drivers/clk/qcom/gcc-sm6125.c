@@ -2569,6 +2569,7 @@ static struct clk_branch gcc_disp_gpll0_div_clk_src = {
 				"gpll0_out_early",
 			},
 			.num_parents = 1,
+			.flags = CLK_IS_CRITICAL,
 			.ops = &clk_branch2_ops,
 		},
 	},

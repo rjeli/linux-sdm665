@@ -900,6 +900,14 @@ static const struct rpm_regulator_data rpm_pms405_regulators[] = {
 	{}
 };
 
+static const struct rpm_regulator_data rpm_pm6125_regulators[] = {
+	/*
+	{ "l10", QCOM_SMD_RPM_LDOA, 10, &pm6125_xxx, "vdd_l10_l13_l14" },
+	{ "l15", QCOM_SMD_RPM_LDOA, 15, &pm6125_xxx, "vdd_l5_l15_l19_l20_l21_l22" },
+	*/
+	{}
+};
+
 static const struct of_device_id rpm_of_match[] = {
 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },

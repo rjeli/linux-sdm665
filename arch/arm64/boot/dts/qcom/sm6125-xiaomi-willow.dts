@@ -20,4 +20,30 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
+
+	vph_pwr: vph-pwr-regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "vph_pwr";
+		regulator-always-on;
+		regulator-boot-on;
+	};
+};
+
+&rpm_requests {
+	pm6125-regulators {
+		compatible = "qcom,rpm-pm6125-regulators";
+
+		vdd_l10_l13_l14-supply = <&vph_pwr>; /* actually s7a (2.04V) */
+		vdd_l5_l15_l19_l20_l21_l22-supply = <&vph_pwr>; /* l15 parent-supply l10? */
+
+		pm6125_l10: l10 {
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1896000>;
+		};
+
+		pm6125_l15: l15 {
+			regulator-min-microvolt = <3104000>;
+			regulator-max-microvolt = <3232000>;
+		};
+	};
 };
