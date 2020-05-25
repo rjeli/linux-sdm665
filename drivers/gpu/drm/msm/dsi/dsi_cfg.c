@@ -153,6 +153,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
 	"iface", "bus",
 };
 
+static const char * const dsi_sm6125_bus_clk_names[] = {
+	"iface", "bus",
+};
+
 static const char * const dsi_sc7180_bus_clk_names[] = {
 	"iface", "bus",
 };
@@ -169,6 +173,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
 	.num_bus_clks = ARRAY_SIZE(dsi_sdm845_bus_clk_names),
 	.io_start = { 0xae94000, 0xae96000 },
 	.num_dsi = 2,
+};
+
+static const struct msm_dsi_config sm6125_dsi_cfg = {
+	.io_offset = DSI_6G_REG_SHIFT,
+	.reg_cfg = {
+		.num = 1,
+		.regs = {
+			{"vdda", 21800, 0},	/* 1.232 V */
+		},
+	},
+	.bus_clk_names = dsi_sm6125_bus_clk_names,
+	.num_bus_clks = ARRAY_SIZE(dsi_sm6125_bus_clk_names),
+	.io_start = { 0x5e94000 },
+	.num_dsi = 1,
 };
 
 static const struct msm_dsi_config sc7180_dsi_cfg = {
@@ -244,6 +262,8 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_3_0,
+		&sm6125_dsi_cfg, &msm_dsi_6g_v2_host_ops},
 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
 		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
 

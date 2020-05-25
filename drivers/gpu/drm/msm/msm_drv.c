@@ -313,6 +313,8 @@ static int msm_init_vram(struct drm_device *dev)
 	unsigned long size = 0;
 	int ret = 0;
 
+	DRM_DEV_INFO(dev->dev, "attempting to init vram\n");
+
 	/* In the device-tree world, we could have a 'memory-region'
 	 * phandle, which gives us a link to our "vram".  Allocating
 	 * is all nicely abstracted behind the dma api, but we need
@@ -355,11 +357,15 @@ static int msm_init_vram(struct drm_device *dev)
 
 		priv->vram.size = size;
 
+		DRM_DEV_INFO(dev->dev, "MM_INIT");
+
 		drm_mm_init(&priv->vram.mm, 0, (size >> PAGE_SHIFT) - 1);
 		spin_lock_init(&priv->vram.lock);
 
 		attrs |= DMA_ATTR_NO_KERNEL_MAPPING;
 		attrs |= DMA_ATTR_WRITE_COMBINE;
+
+		DRM_DEV_INFO(dev->dev, "DMA_ALLOC_ATTRS");
 
 		/* note that for no-kernel-mapping, the vaddr returned
 		 * is bogus, but non-null if allocation succeeded:

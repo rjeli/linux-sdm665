@@ -943,7 +943,7 @@ static int pll_14nm_register(struct dsi_pll_14nm *pll_14nm)
 {
 	char clk_name[32], parent[32], vco_name[32];
 	struct clk_init_data vco_init = {
-		.parent_names = (const char *[]){ "xo" },
+		.parent_names = (const char *[]){ "bi_tcxo" },
 		.num_parents = 1,
 		.name = vco_name,
 		.flags = CLK_IGNORE_UNUSED,
@@ -984,7 +984,7 @@ static int pll_14nm_register(struct dsi_pll_14nm *pll_14nm)
 
 	hws[num++] = hw;
 
-	snprintf(clk_name, 32, "dsi%dpllbyte", pll_14nm->id);
+	snprintf(clk_name, 32, "dsi%d_phy_pll_out_byteclk", pll_14nm->id);
 	snprintf(parent, 32, "dsi%dn1_postdiv_clk", pll_14nm->id);
 
 	/* DSI Byte clock = VCO_CLK / N1 / 8 */
@@ -1009,7 +1009,7 @@ static int pll_14nm_register(struct dsi_pll_14nm *pll_14nm)
 
 	hws[num++] = hw;
 
-	snprintf(clk_name, 32, "dsi%dpll", pll_14nm->id);
+	snprintf(clk_name, 32, "dsi%d_phy_pll_out_dsiclk", pll_14nm->id);
 	snprintf(parent, 32, "dsi%dn1_postdivby2_clk", pll_14nm->id);
 
 	/* DSI pixel clock = VCO_CLK / N1 / 2 / N2

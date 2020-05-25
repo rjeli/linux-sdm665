@@ -1744,6 +1744,8 @@ static int dsi_host_parse_dt(struct msm_dsi_host *msm_host)
 	struct device_node *endpoint, *device_node;
 	int ret = 0;
 
+	printk(KERN_INFO "getting output ep\n");
+
 	/*
 	 * Get the endpoint of the output port of the DSI host. In our case,
 	 * this is mapped to port number with reg = 1. Don't return an error if
@@ -1756,6 +1758,8 @@ static int dsi_host_parse_dt(struct msm_dsi_host *msm_host)
 		return 0;
 	}
 
+	printk(KERN_INFO "getting lane data\n");
+
 	ret = dsi_host_parse_lane_data(msm_host, endpoint);
 	if (ret) {
 		DRM_DEV_ERROR(dev, "%s: invalid lane configuration %d\n",
@@ -1764,15 +1768,19 @@ static int dsi_host_parse_dt(struct msm_dsi_host *msm_host)
 		goto err;
 	}
 
+	printk(KERN_INFO "getting input ep\n");
+
 	/* Get panel node from the output port's endpoint data */
 	device_node = of_graph_get_remote_node(np, 1, 0);
 	if (!device_node) {
-		DRM_DEV_DEBUG(dev, "%s: no valid device\n", __func__);
+		DRM_DEV_ERROR(dev, "%s: no valid device\n", __func__);
 		ret = -ENODEV;
 		goto err;
 	}
 
 	msm_host->device_node = device_node;
+
+	printk(KERN_INFO "getting syscon\n");
 
 	if (of_property_read_bool(np, "syscon-sfpb")) {
 		msm_host->sfpb = syscon_regmap_lookup_by_phandle(np,

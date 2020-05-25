@@ -793,7 +793,7 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
 
 	endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
 	if (!endpoint_node) {
-		pr_debug("no valid endpoint (%d, %d) for node %pOF\n",
+		printk("no valid endpoint (%d, %d) for node %pOF\n",
 			 port, endpoint, node);
 		return NULL;
 	}
@@ -801,12 +801,12 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
 	remote = of_graph_get_remote_port_parent(endpoint_node);
 	of_node_put(endpoint_node);
 	if (!remote) {
-		pr_debug("no valid remote node\n");
+		printk("no valid remote node\n");
 		return NULL;
 	}
 
 	if (!of_device_is_available(remote)) {
-		pr_debug("not available for remote node\n");
+		printk("not available for remote node\n");
 		of_node_put(remote);
 		return NULL;
 	}

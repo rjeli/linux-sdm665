@@ -73,16 +73,22 @@ static int dsi_mgr_setup_components(int id)
 	struct msm_dsi_pll *src_pll;
 	int ret;
 
+	printk(KERN_INFO "setup_comp: IS_DUAL_DSI: %d\n", IS_DUAL_DSI());
+
 	if (!IS_DUAL_DSI()) {
 		ret = msm_dsi_host_register(msm_dsi->host, true);
+		printk(KERN_INFO "host_register ret=%d\n", ret);
 		if (ret)
 			return ret;
 
 		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
 		src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
+		printk(KERN_INFO "src_pll=%p is_err=%d err=%ld\n",
+			src_pll, IS_ERR(src_pll), PTR_ERR(src_pll));
 		if (IS_ERR(src_pll))
 			return PTR_ERR(src_pll);
 		ret = msm_dsi_host_set_src_pll(msm_dsi->host, src_pll);
+		printk(KERN_INFO "set_src_pll ret=%d\n", ret);
 	} else if (!other_dsi) {
 		ret = 0;
 	} else {

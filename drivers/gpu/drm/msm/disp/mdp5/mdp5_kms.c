@@ -892,6 +892,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
 
 	read_mdp_hw_revision(mdp5_kms, &major, &minor);
 
+	dev_info(dev->dev, "mdp5_cfg_init\n");
+
 	mdp5_kms->cfg = mdp5_cfg_init(mdp5_kms, major, minor);
 	if (IS_ERR(mdp5_kms->cfg)) {
 		ret = PTR_ERR(mdp5_kms->cfg);
@@ -899,11 +901,17 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
 		goto fail;
 	}
 
+	dev_info(dev->dev, "mdp5_cfg_get_config\n");
+
 	config = mdp5_cfg_get_config(mdp5_kms->cfg);
 	mdp5_kms->caps = config->hw->mdp.caps;
 
+	dev_info(dev->dev, "clk_set_rate\n");
+
 	/* TODO: compute core clock rate at runtime */
 	clk_set_rate(mdp5_kms->core_clk, config->hw->max_clk);
+
+	dev_info(dev->dev, "init smp\n");
 
 	/*
 	 * Some chipsets have a Shared Memory Pool (SMP), while others
@@ -919,6 +927,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
 		}
 	}
 
+	dev_info(dev->dev, "ctlm_init\n");
+
 	mdp5_kms->ctlm = mdp5_ctlm_init(dev, mdp5_kms->mmio, mdp5_kms->cfg);
 	if (IS_ERR(mdp5_kms->ctlm)) {
 		ret = PTR_ERR(mdp5_kms->ctlm);
@@ -926,17 +936,25 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
 		goto fail;
 	}
 
+	dev_info(dev->dev, "hwpipe init\n");
+
 	ret = hwpipe_init(mdp5_kms);
 	if (ret)
 		goto fail;
+
+	dev_info(dev->dev, "hwmixer init\n");
 
 	ret = hwmixer_init(mdp5_kms);
 	if (ret)
 		goto fail;
 
+	dev_info(dev->dev, "interface init\n");
+
 	ret = interface_init(mdp5_kms);
 	if (ret)
 		goto fail;
+
+	dev_info(dev->dev, "done\n");
 
 	/* set uninit-ed kms */
 	priv->kms = &mdp5_kms->base.base;

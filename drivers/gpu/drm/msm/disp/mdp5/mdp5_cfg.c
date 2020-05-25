@@ -842,8 +842,12 @@ static const struct mdp5_cfg_hw sm6125_config = {
 		.caps = 0,
 	},
 	.ctl = {
+		/*
 		.count = 6,
 		.base = { 0x2000, 0x2200, 0x2400, 0x2600, 0x2800, 0x2a00 },
+		*/
+		.count = 5,
+		.base = { 0x2000, 0x2200, 0x2400, 0x2600, 0x2800 },
 		.flush_hw_mask = 0xf4ffffff, /* guess */
 	},
 	.pipe_vig = {
@@ -892,8 +896,8 @@ static const struct mdp5_cfg_hw sm6125_config = {
 		.base = { 0x71000, 0x71800 },
 	},
 	.cdm = {
-		.count = 0,
-		.base = {},
+		.count = 1,
+		.base = { 0x7a200 },
 	},
 	.dsc = {
 		.count = 0,
