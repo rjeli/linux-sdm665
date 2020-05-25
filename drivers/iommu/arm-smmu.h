@@ -273,6 +273,9 @@ struct arm_smmu_device {
 #define ARM_SMMU_FEAT_EXIDS		(1 << 12)
 	u32				features;
 
+#define ARM_SMMU_OPT_SKIP_INIT		(1 << 0)
+	u32				options;
+
 	enum arm_smmu_arch_version	version;
 	enum arm_smmu_implementation	model;
 	const struct arm_smmu_impl	*impl;
